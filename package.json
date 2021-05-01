@@ -1,0 +1,19 @@
+{
+  "name": "theclock",
+  "version": "0.1.0",
+  "description": "the Clock Website",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bagger3025/theClock.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bagger3025/theClock/issues"
+  },
+  "homepage": "https://github.com/bagger3025/theClock#readme"
+}
