@@ -7,7 +7,7 @@ let timerDict = {},
 // Get Number, Display clock
 function setClockNumber(timer, hour, minute, second) {
 	timer.textContent = `${
-		hour == 0 ? "" : hour < 10 ? "0" + hour + " : " : hour + " : "
+		hour === 0 ? "" : hour < 10 ? "0" + hour + " : " : hour + " : "
 	}${minute < 10 ? "0" + minute : minute} : ${
 		second < 10 ? "0" + second : second
 	}`;
@@ -15,10 +15,12 @@ function setClockNumber(timer, hour, minute, second) {
 
 // When time's up, make alarm
 function makeAlarm(id) {
+	// alarm play
 	const alarm = new Audio(`./sound/${timerDict[id].sound}.mp3`);
-	alarm.volume = timerDict[id].volume - 0.2;
+	alarm.volume = timerDict[id].volume;
 	alarm.play();
 
+	// stop button event
 	const stopAlarmButton = document
 		.getElementById(`${id}`)
 		.querySelector(".timer-stopalarm");
@@ -28,13 +30,16 @@ function makeAlarm(id) {
 	});
 }
 
-// Make timer run
+// Make timer run, called every second
 function timerCountDown(id) {
-	const remainTime = Math.ceil(
-		(new Date(timerDict[id].finishTime).getTime() - Date.now()) / 1000
-	);
-
-	if (remainTime < 0 || !timerDict[id].running) {
+	// calculate remaintime
+	const remainTime = (timerDict[id].finishTime - Date.now()) / 1000;
+	// if not running, stop decreasing time
+	// else if negative, set 00:00, clear interval and make alarm
+	// else, show remaintime
+	if (!timerDict[id].running) {
+		clearInterval(intervalDict[id]);
+	} else if (remainTime < 0) {
 		setClockNumber(
 			document.getElementById(`${id}`).querySelector(".timer-time"),
 			0,
@@ -43,86 +48,217 @@ function timerCountDown(id) {
 		);
 		console.log("Time's Up!");
 		makeAlarm(id);
+
+		timerDict[id].finishTime = 0;
+		timerDict[id].running = false;
+		saveList();
+
 		clearInterval(intervalDict[id]);
 	} else {
-		const second = parseInt(remainTime % 60);
-		const minute = parseInt(remainTime / 60) % 60;
-		const hour = parseInt(remainTime / 3600);
+		const timeObj = timesFromTotalTime(Math.ceil(remainTime));
 		setClockNumber(
 			document.getElementById(`${id}`).querySelector(".timer-time"),
-			hour,
-			minute,
-			second
+			timeObj.hour,
+			timeObj.minute,
+			timeObj.second
 		);
 	}
 }
 
-// Time Trigger Function
+// When running, update bar
+function progressBar(id) {
+	const bar = document.getElementById(`${id}`).querySelector(".progress-bar");
+	(function innerLoop() {
+		if (timerDict[id].running) {
+			const percentage =
+				((timerDict[id].finishTime - Date.now()) * 100) /
+				timerDict[id].totalTime;
+			bar.style = `width: ${percentage}%`;
+			setTimeout(innerLoop, 10);
+		}
+	})();
+}
+
+// Timer Start
 function timerStart(button) {
 	const timerBody = button.target.parentNode;
 
-	const curTimes = timerBody
-		.querySelector(".timer-time")
-		.textContent.split(/\ : |d /);
-
-	let day, hour, minute, second;
-
-	for (let i = 0; i < curTimes.length; i++) {
-		curTimes[i] = parseInt(curTimes[i]);
+	if (timerDict[timerBody.id].finishTime === 0) {
+		console.log("You can't start timer when it's 0:00");
+		return;
 	}
 
-	if (curTimes.length == 4) {
-		day = curTimes[0];
-		hour = curTimes[1];
-		minute = curTimes[2];
-		second = curTimes[3];
-	} else if (curTimes.length == 3) {
-		day = 0;
-		hour = curTimes[0];
-		minute = curTimes[1];
-		second = curTimes[2];
-	} else {
-		day = 0;
-		hour = 0;
-		minute = curTimes[0];
-		second = curTimes[1];
+	if (!timerDict[timerBody.id].running) {
+		timerDict[timerBody.id].finishTime += Date.now();
+		timerDict[timerBody.id].running = true;
+		saveList();
 	}
 
-	const totalseconds = ((day * 24 + hour) * 60 + minute) * 60 + second;
-	timerDict[timerBody.id].finishTime = new Date(
-		Date.now() + totalseconds * 1000
-	);
-	timerDict[timerBody.id].running = true;
-
-	saveList();
-
+	timerCountDown(timerBody.id);
+	// Call function every second
 	intervalDict[timerBody.id] = setInterval(
 		timerCountDown,
-		1000,
+		timerDict[timerBody.id].finishTime % 1000,
 		timerBody.id
 	);
+
+	// move progress bar
+	progressBar(timerBody.id);
 }
 
 // Timer Stop Function
 function timerStop(button) {
+	// Change setting and save
 	const timerBody = button.target.parentNode;
-	clearInterval(intervalDict[timerBody.id]);
-	const totalTime = timerDict[timerBody.id].finishTime - Date.now();
-	timerDict[timerBody.id].finishTime = new Date(totalTime);
-	timerDict[timerBody.id].running = false;
-	saveList();
+	if (timerDict[timerBody.id].running) {
+		const totalTime = timerDict[timerBody.id].finishTime - Date.now();
+		timerDict[timerBody.id].finishTime = totalTime;
+		timerDict[timerBody.id].running = false;
+		saveList();
+
+		// Bar setting
+		const bar = timerBody.querySelector(".progress-bar");
+		bar.style = `width: ${
+			(totalTime / timerDict[timerBody.id].totalTime) * 100
+		}%`;
+		console.log(
+			`width: ${(totalTime / timerDict[timerBody.id].totalTime) * 100}%`
+		);
+	}
 }
 
 // Timer Reset Function
 function timerReset(button) {
 	const timerBody = button.target.parentNode;
+
+	// stop repeat
 	clearInterval(intervalDict[timerBody.id]);
-	setClockNumber(timerBody.querySelector(".timer-time"), 0, 0, 0);
-	timerDict[timerBody.id].time = new Date(0);
+
+	// reset screen timer to initial setting
+	const timeObj = timesFromTotalTime(
+		timerDict[timerBody.id].totalTime / 1000
+	);
+	setClockNumber(
+		timerBody.querySelector(".timer-time"),
+		timeObj.hour,
+		timeObj.minute,
+		timeObj.second
+	);
+
+	// bar setting
+	const bar = timerBody.querySelector(".progress-bar");
+	bar.style = "width: 100%";
+
+	// settings save
+	timerDict[timerBody.id].finishTime = timerDict[timerBody.id].totalTime;
 	timerDict[timerBody.id].running = false;
 	saveList();
 }
 
+// Save settings
+function makeSettings(button) {
+	const modalBody = button.target.parentNode.parentNode,
+		timerBody = modalBody.parentNode.parentNode.parentNode.parentNode,
+		inputDiv = modalBody.querySelector(".modal-body"),
+		timeInput = inputDiv
+			.querySelector(".time-setting")
+			.querySelectorAll("input"),
+		selectedSound = modalBody.querySelector(".selected-sound"),
+		selectedSoundVolume = modalBody.querySelector(".sound-volume"),
+		bar = timerBody.querySelector(".progress-bar");
+
+	modalBody.className = "row g-3 needs-validation";
+
+	// if not valid, don't proceed
+	if (!modalBody.checkValidity()) {
+		return;
+	}
+
+	// Set Title
+	timerDict[timerBody.id].title = modalBody
+		.querySelector(".timer-settitle")
+		.querySelector("input").value;
+	timerBody.querySelector(".timer-title").innerText =
+		timerDict[timerBody.id].title;
+
+	// SetTime
+	const hour = isNaN(parseInt(timeInput[0].value))
+			? (timeInput[0].value = 0)
+			: parseInt(timeInput[0].value),
+		minute = isNaN(parseInt(timeInput[1].value))
+			? (timeInput[1].value = 0)
+			: parseInt(timeInput[1].value),
+		second = isNaN(parseInt(timeInput[2].value))
+			? (timeInput[2].value = 0)
+			: parseInt(timeInput[2].value);
+	setClockNumber(
+		timerBody.querySelector(".timer-time"),
+		hour,
+		minute,
+		second
+	);
+
+	// Set bar
+	bar.style = "width: 100%";
+
+	// Save settings
+	const totalMilliSeconds = ((hour * 60 + minute) * 60 + second) * 1000;
+	timerDict[timerBody.id].finishTime = totalMilliSeconds;
+	timerDict[timerBody.id].totalTime = totalMilliSeconds;
+	timerDict[timerBody.id].running = false;
+	clearInterval(intervalDict[timerBody.id]);
+	timerDict[timerBody.id].sound = selectedSound.value;
+	timerDict[timerBody.id].volume = selectedSoundVolume.valueAsNumber;
+	saveList();
+
+	// Close
+	modalBody.querySelector(".timer-SettingClose").click();
+}
+
+// totaltime => {hour, minute, second}
+function timesFromTotalTime(totalTime) {
+	// no negative time
+	if (totalTime < 0) totalTime = 0;
+
+	// return hour, minute, second
+	const hour = Math.floor(totalTime / 3600);
+	const minute = Math.floor((totalTime / 60) % 60);
+	const second = Math.floor(totalTime % 60);
+	return {
+		hour,
+		minute,
+		second,
+	};
+}
+
+// Fill basic settings
+function loadSetting(div, item) {
+	const modalBody = div.querySelector(".modal-body"),
+		titleInput = modalBody.querySelector(".timer-settitle"),
+		timeInputs = modalBody
+			.querySelector(".time-setting-input")
+			.querySelectorAll("input"),
+		selectSound = modalBody.querySelector(".selected-sound"),
+		soundVolumeSetting = modalBody.querySelector(".sound-volume");
+
+	// title setting
+	titleInput.value = item.title;
+
+	// time setting
+	const totalTime = Math.ceil(item.totalTime / 1000);
+	const timeObj = timesFromTotalTime(totalTime);
+	timeInputs[0].value = timeObj.hour;
+	timeInputs[1].value = timeObj.minute;
+	timeInputs[2].value = timeObj.second;
+
+	// soundoption setting
+	selectSound.value = item.sound;
+
+	// soundvolume setting
+	soundVolumeSetting.value = item.volume;
+}
+
+// div html content
 function setDiv(div, id, item) {
 	const title = item.title,
 		volume = item.volume;
@@ -135,6 +271,9 @@ function setDiv(div, id, item) {
 		></button>
 	</div>
 	<h3 class="timer-time">00 : 00</h3>
+	<div class="progress">
+  		<div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+	</div>
 	<button type="button" class="btn btn-success timer-start">Start</button>
 	<button type="button" class="btn btn-danger timer-stop">Stop</button>
 	<button type="button" class="btn btn-secondary timer-reset">Reset</button>
@@ -277,68 +416,12 @@ function setDiv(div, id, item) {
 `;
 }
 
-function makeSettings(button) {
-	const modalBody = button.target.parentNode.parentNode,
-		timerBody = modalBody.parentNode.parentNode.parentNode.parentNode,
-		inputDiv = modalBody.querySelector(".modal-body"),
-		timeInput = inputDiv
-			.querySelector(".time-setting")
-			.querySelectorAll("input");
-	if (!modalBody.checkValidity()) {
-		return;
-	}
-
-	modalBody.className = "row g-3 needs-validation";
-
-	// Set Title
-	timerDict[timerBody.id].title = modalBody
-		.querySelector(".timer-settitle")
-		.querySelector("input").value;
-	timerBody.querySelector(".timer-title").innerText =
-		timerDict[timerBody.id].title;
-
-	// SetTime
-	const hour = isNaN(parseInt(timeInput[0].value))
-			? (timeInput[0].value = 0)
-			: parseInt(timeInput[0].value),
-		minute = isNaN(parseInt(timeInput[1].value))
-			? (timeInput[1].value = 0)
-			: parseInt(timeInput[1].value),
-		second = isNaN(parseInt(timeInput[2].value))
-			? (timeInput[2].value = 0)
-			: parseInt(timeInput[2].value);
-
-	setClockNumber(
-		timerBody.querySelector(".timer-time"),
-		hour,
-		minute,
-		second
-	);
-
-	timerDict[timerBody.id].finishTime = new Date(
-		((hour * 60 + minute) * 60 + second) * 1000
-	);
-	timerDict[timerBody.id].running = false;
-
-	// Set soundOption and soundVolume
-	const selectedSound = modalBody.querySelector(".selected-sound"),
-		selectedSoundVolume = modalBody.querySelector(".sound-volume");
-
-	timerDict[timerBody.id].sound = selectedSound.value;
-	timerDict[timerBody.id].volume = selectedSoundVolume.valueAsNumber;
-	saveList();
-	modalBody.querySelector(".timer-SettingClose").click();
-}
-
-function saveList() {
-	localStorage.setItem("timer", JSON.stringify(timerDict));
-}
-
+// Make new timerdiv
 function createCurDiv() {
-	const zeroTime = new Date(0);
-
+	// Basic settings
 	const thisTimer = {
-		finishTime: zeroTime,
+		finishTime: 0,
+		totalTime: 0,
 		running: false,
 		sound: "Alarm",
 		title: `Title${Object.keys(timerDict).length}`,
@@ -347,51 +430,9 @@ function createCurDiv() {
 	createDiv(Date.now(), thisTimer);
 }
 
-function deleteTimer(button) {
-	const timerBody = button.target.parentNode.parentNode;
-	timerBody.remove();
-	delete timerDict[timerBody.id];
-	saveList();
-}
-
-function timesFromTotalTime(totalTime) {
-	if (totalTime < 0) totalTime = 0;
-	const hour = Math.floor(totalTime / 3600);
-	const minute = Math.floor((totalTime / 60) % 60);
-	const second = Math.floor(totalTime % 60);
-	return {
-		hour,
-		minute,
-		second,
-	};
-}
-
-function loadSetting(div, item) {
-	const modalBody = div.querySelector(".modal-body");
-
-	const totalTime = item.running
-		? (new Date(item.finishTime).getTime() - Date.now()) / 1000
-		: new Date(item.finishTime).getTime() / 1000;
-
-	const titleInput = modalBody.querySelector(".timer-settitle");
-	titleInput.value = item.title;
-
-	const timeInputs = modalBody
-		.querySelector(".time-setting-input")
-		.querySelectorAll("input");
-	const timeObj = timesFromTotalTime(Math.ceil(totalTime));
-	timeInputs[0].value = timeObj.hour;
-	timeInputs[1].value = timeObj.minute;
-	timeInputs[2].value = timeObj.second;
-
-	const selectSound = modalBody.querySelector(".selected-sound");
-	selectSound.value = item.sound;
-
-	modalBody.querySelector(".sound-volume").value = item.volume;
-}
-
+// Make timerdiv
 function createDiv(id, item) {
-	const list = document.querySelector(".timer-list");
+	// set div
 	const div = document.createElement("div");
 	div.id = id;
 	setDiv(div, id, item);
@@ -415,11 +456,13 @@ function createDiv(id, item) {
 		);
 	});
 
+	// Clock to screen
 	const totalTime = item.running
-		? (new Date(item.finishTime).getTime() - Date.now()) / 1000
-		: new Date(item.finishTime).getTime() / 1000;
+		? (item.finishTime - Date.now()) / 1000
+		: item.finishTime / 1000;
 
-	const timeObj = timesFromTotalTime(totalTime);
+	const timeObj = timesFromTotalTime(Math.ceil(totalTime));
+	console.log(timeObj);
 	setClockNumber(
 		div.querySelector(".timer-time"),
 		timeObj.hour,
@@ -427,12 +470,21 @@ function createDiv(id, item) {
 		timeObj.second
 	);
 
+	// Bar to screen
+	const bar = div.querySelector(".progress-bar");
+	bar.style = `width: ${
+		item.totalTime === 0
+			? 100
+			: ((totalTime < 0 ? 0 : totalTime) / (item.totalTime / 1000)) * 100
+	}%`;
+
+	// Setting input with item
 	loadSetting(div, item);
 
+	// Assign event to buttons
 	const timerStartButton = div.querySelector(".timer-start"),
 		timerStopButton = div.querySelector(".timer-stop"),
 		timerResetButton = div.querySelector(".timer-reset"),
-		timerStopAlarm = div.querySelector(".timer-stopalarm"),
 		timerSaveChanges = div.querySelector(".timer-settingButton"),
 		timerCloseChanges = div.querySelector(".timer-SettingClose"),
 		timerButtomCloseChanges = div.querySelector(
@@ -452,20 +504,38 @@ function createDiv(id, item) {
 	});
 	timerClose.addEventListener("click", deleteTimer);
 
+	// div to screen
+	const list = document.querySelector(".timer-list");
 	list.appendChild(div);
 
+	// add item to local dictionary, and save
 	timerDict[id] = item;
 	saveList();
 
+	// if it is running, automatically click start
 	if (item.running) {
 		timerStartButton.click();
 	}
 }
 
+// Delete timer and save
+function deleteTimer(button) {
+	// Screen remove
+	const timerBody = button.target.parentNode.parentNode;
+	timerBody.remove();
+
+	// Delete storage, dictionary
+	delete timerDict[timerBody.id];
+	delete intervalDict[timerBody.id];
+	delete soundDict[timerBody.id];
+	saveList();
+}
+
+// Load storage
 function loadStorage() {
 	const item = JSON.parse(localStorage.getItem("timer"));
 
-	if (Object.keys(item).length === 0) {
+	if (!item || Object.keys(item).length === 0) {
 		createCurDiv();
 		return;
 	}
@@ -473,6 +543,11 @@ function loadStorage() {
 	for (const id in item) {
 		createDiv(id, item[id]);
 	}
+}
+
+// Save storage
+function saveList() {
+	localStorage.setItem("timer", JSON.stringify(timerDict));
 }
 
 // First Function
