@@ -265,9 +265,11 @@ function setDiv(div, id, item) {
 	div.innerHTML = `
 	<div class="timer-header">
 		<p class="timer-title">${title}</p>
+		<i class="bi bi-arrows-move timer-move p-4" style="cursor: move; visibility: hidden;" draggable=true></i>
 		<button
 			type="button"
 			class="btn-close timer-Close"
+			style="visibility: hidden;"
 		></button>
 	</div>
 	<h3 class="timer-time">00 : 00</h3>
@@ -430,11 +432,25 @@ function createCurDiv() {
 	createDiv(Date.now(), thisTimer);
 }
 
+// visible add to Remove Button
+function addVisibleButton(target) {
+	target.target.querySelector(".timer-Close").style.visibility = "visible";
+	target.target.querySelector(".timer-move").style.visibility = "visible";
+}
+
+// visible remove to Remove Button
+function removeVisibleButton(target) {
+	target.target.querySelector(".timer-Close").style.visibility = "hidden";
+	target.target.querySelector(".timer-move").style.visibility = "hidden";
+}
+
 // Make timerdiv
 function createDiv(id, item) {
 	// set div
 	const div = document.createElement("div");
 	div.id = id;
+	div.draggable = true;
+	div.classList = "timer";
 	setDiv(div, id, item);
 
 	// Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -504,9 +520,33 @@ function createDiv(id, item) {
 	});
 	timerClose.addEventListener("click", deleteTimer);
 
+	// if mouse is over the div,
+	div.addEventListener("mouseenter", addVisibleButton);
+	div.addEventListener("mouseleave", removeVisibleButton);
+
 	// div to screen
 	const list = document.querySelector(".timer-list");
 	list.appendChild(div);
+
+	// if mouse drags div,
+	const mouseDraggable = div.querySelector(".timer-move");
+	const empty_div = document.createElement("div");
+	empty_div.id = 0;
+	empty_div.className = "timer";
+	mouseDraggable.addEventListener("dragstart", (event) => {
+		//event.target.parentNode.parentNode;
+		console.dir(event.target.parentNode.parentNode.style.position);
+		event.target.style.opacity = 0.1;
+		console.log("Dragged!");
+	});
+	mouseDraggable.addEventListener("drag", (event) => {
+		console.log(event.layerX, event.layerY);
+		list.replaceChild(div, empty_div);
+		div.style.position = "absolute";
+		div.style.top = "20px";
+		div.style.left = "20px";
+	});
+	console.dir(mouseDraggable);
 
 	// add item to local dictionary, and save
 	timerDict[id] = item;
