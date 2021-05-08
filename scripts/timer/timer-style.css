@@ -14,3 +14,7 @@
 .timer-list {
 	position: relative;
 }
+
+.timer-focused {
+	background-color: #7ed6df;
+}

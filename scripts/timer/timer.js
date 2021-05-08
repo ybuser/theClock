@@ -25,6 +25,10 @@ function makeAlarm(id) {
 		.getElementById(`${id}`)
 		.querySelector(".timer-stopalarm");
 	stopAlarmButton.addEventListener("click", () => {
+		// Make div focused
+		makeDivFocused(document.getElementById(id));
+
+		// Alarm off
 		alarm.pause();
 		alarm.currentTime = 0;
 	});
@@ -83,6 +87,9 @@ function progressBar(id) {
 function timerStart(button) {
 	const timerBody = button.target.parentNode;
 
+	// Make div focused
+	makeDivFocused(timerBody);
+
 	if (timerDict[timerBody.id].finishTime === 0) {
 		console.log("You can't start timer when it's 0:00");
 		return;
@@ -108,8 +115,12 @@ function timerStart(button) {
 
 // Timer Stop Function
 function timerStop(button) {
-	// Change setting and save
 	const timerBody = button.target.parentNode;
+
+	// Make div focused
+	makeDivFocused(timerBody);
+
+	// Change setting and save
 	if (timerDict[timerBody.id].running) {
 		const totalTime = timerDict[timerBody.id].finishTime - Date.now();
 		timerDict[timerBody.id].finishTime = totalTime;
@@ -130,6 +141,10 @@ function timerStop(button) {
 // Timer Reset Function
 function timerReset(button) {
 	const timerBody = button.target.parentNode;
+	/*
+	// Make div focused
+	makeDivFocused(timerBody);
+	console.log("FOCUSED!");*/
 
 	// stop repeat
 	clearInterval(intervalDict[timerBody.id]);
@@ -166,8 +181,6 @@ function makeSettings(button) {
 		selectedSound = modalBody.querySelector(".selected-sound"),
 		selectedSoundVolume = modalBody.querySelector(".sound-volume"),
 		bar = timerBody.querySelector(".progress-bar");
-
-	modalBody.className = "row g-3 needs-validation";
 
 	// if not valid, don't proceed
 	if (!modalBody.checkValidity()) {
@@ -213,6 +226,16 @@ function makeSettings(button) {
 
 	// Close
 	modalBody.querySelector(".timer-SettingClose").click();
+
+	// Remove check sign
+	setTimeout(() => {
+		modalBody.className = "row g-3 needs-validation";
+	}, 100);
+
+	timerBody.focus();
+	setTimeout(() => {
+		timerBody.focus();
+	}, 500);
 }
 
 // totaltime => {hour, minute, second}
@@ -281,7 +304,7 @@ function setDiv(div, id, item) {
 	<button type="button" class="btn btn-secondary timer-reset">Reset</button>
 	<button
 		type="button"
-		class="btn btn-primary"
+		class="btn btn-primary timer-settingOpen"
 		data-bs-toggle="modal"
 		data-bs-target="#modal_${id}"
 	>
@@ -444,12 +467,35 @@ function removeVisibleButton(target) {
 	target.target.querySelector(".timer-move").style.visibility = "hidden";
 }
 
+function getFocused(event) {
+	console.log(event.target);
+	event.target.className = "timer-focused";
+}
+
+function getBlurred(event) {
+	console.log("BLURRED!");
+	console.log(event);
+
+	if (
+		event.target.contains(event.relatedTarget) &&
+		!event.relatedTarget.classList.contains("timer-settingOpen")
+	) {
+		event.target.focus();
+	} else {
+		event.target.className = "";
+	}
+}
+
+function makeDivFocused(div) {
+	div.focus();
+}
+
 // Make timerdiv
 function createDiv(id, item) {
 	// set div
 	const div = document.createElement("div");
 	div.id = id;
-	div.draggable = true;
+	div.tabIndex = 0;
 	div.classList = "timer";
 	setDiv(div, id, item);
 
@@ -523,6 +569,8 @@ function createDiv(id, item) {
 	// if mouse is over the div,
 	div.addEventListener("mouseenter", addVisibleButton);
 	div.addEventListener("mouseleave", removeVisibleButton);
+	div.addEventListener("focus", getFocused);
+	div.addEventListener("blur", getBlurred);
 
 	// div to screen
 	const list = document.querySelector(".timer-list");
