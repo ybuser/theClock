@@ -4,6 +4,9 @@ let timerDict = {},
 	intervalDict = {},
 	soundDict = {};
 
+let focusedID = 0,
+	previousID = 0;
+
 // Get Number, Display clock
 function setClockNumber(timer, hour, minute, second) {
 	timer.textContent = `${
@@ -141,10 +144,9 @@ function timerStop(button) {
 // Timer Reset Function
 function timerReset(button) {
 	const timerBody = button.target.parentNode;
-	/*
+
 	// Make div focused
 	makeDivFocused(timerBody);
-	console.log("FOCUSED!");*/
 
 	// stop repeat
 	clearInterval(intervalDict[timerBody.id]);
@@ -231,11 +233,6 @@ function makeSettings(button) {
 	setTimeout(() => {
 		modalBody.className = "row g-3 needs-validation";
 	}, 100);
-
-	timerBody.focus();
-	setTimeout(() => {
-		timerBody.focus();
-	}, 500);
 }
 
 // totaltime => {hour, minute, second}
@@ -279,10 +276,16 @@ function loadSetting(div, item) {
 
 	// soundvolume setting
 	soundVolumeSetting.value = item.volume;
+
+	// Make div focused
+	makeDivFocused(div);
 }
 
 // div html content
 function setDiv(div, id, item) {
+	div.id = id;
+	div.tabIndex = 0;
+	div.classList = "timer";
 	const title = item.title,
 		volume = item.volume;
 	div.innerHTML = `
@@ -468,35 +471,93 @@ function removeVisibleButton(target) {
 }
 
 function getFocused(event) {
-	console.log(event.target);
-	event.target.className = "timer-focused";
-}
+	// modify focusedid to current div
+	focusedID = event.target.id;
+	event.target.classList.add("timer-focused");
 
-function getBlurred(event) {
-	console.log("BLURRED!");
-	console.log(event);
-
-	if (
-		event.target.contains(event.relatedTarget) &&
-		!event.relatedTarget.classList.contains("timer-settingOpen")
-	) {
-		event.target.focus();
-	} else {
-		event.target.className = "";
+	// if it is different from previous id,
+	if (focusedID !== previousID) {
+		// find previous div
+		const k = document.getElementById(previousID);
+		if (k) {
+			// remove class from previous div
+			k.classList.remove("timer-focused");
+		}
+		// update previous div
+		previousID = focusedID;
 	}
 }
 
+// make div focused
 function makeDivFocused(div) {
 	div.focus();
+}
+
+// Assign event to buttons
+function createDivEvents(div, item) {
+	const timerStartButton = div.querySelector(".timer-start"),
+		timerStopButton = div.querySelector(".timer-stop"),
+		timerResetButton = div.querySelector(".timer-reset"),
+		timerSaveChanges = div.querySelector(".timer-settingButton"),
+		timerCloseChanges = div.querySelector(".timer-SettingClose"),
+		timerButtomCloseChanges = div.querySelector(
+			".timer-buttomCloseSetting"
+		),
+		timerClose = div.querySelector(".timer-Close"),
+		timerStopAlarmButton = div.querySelector(".timer-stopalarm");
+
+	timerStartButton.addEventListener("click", timerStart);
+	timerStopButton.addEventListener("click", timerStop);
+	timerResetButton.addEventListener("click", timerReset);
+	timerSaveChanges.addEventListener("click", makeSettings);
+	timerCloseChanges.addEventListener("click", () => {
+		loadSetting(div, item);
+	});
+	timerButtomCloseChanges.addEventListener("click", () => {
+		loadSetting(div, item);
+	});
+	timerClose.addEventListener("click", deleteTimer);
+	timerStopAlarmButton.addEventListener("click", () => {
+		div.focus();
+	});
+
+	// if mouse is over the div,
+	div.addEventListener("mouseenter", addVisibleButton);
+	div.addEventListener("mouseleave", removeVisibleButton);
+	div.addEventListener("focus", getFocused);
+
+	// if mouse drags div,
+	const empty_div = createEmptyDiv(),
+		mouseDraggable = div.querySelector(".timer-move");
+
+	mouseDraggable.addEventListener("dragstart", (event) => {
+		//event.target.parentNode.parentNode;
+		console.dir(event.target.parentNode.parentNode.style.position);
+		event.target.style.opacity = 0.1;
+		console.log("Dragged!");
+	});
+	mouseDraggable.addEventListener("drag", (event) => {
+		console.log(event.layerX, event.layerY);
+		list.replaceChild(div, empty_div);
+		div.style.position = "absolute";
+		div.style.top = "20px";
+		div.style.left = "20px";
+	});
+}
+
+// Make Emptydiv
+function createEmptyDiv() {
+	const empty_div = document.createElement("div");
+	empty_div.id = Object.keys(timerDict).length;
+	empty_div.className = "timer";
+
+	return empty_div;
 }
 
 // Make timerdiv
 function createDiv(id, item) {
 	// set div
 	const div = document.createElement("div");
-	div.id = id;
-	div.tabIndex = 0;
-	div.classList = "timer";
 	setDiv(div, id, item);
 
 	// Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -544,57 +605,11 @@ function createDiv(id, item) {
 	loadSetting(div, item);
 
 	// Assign event to buttons
-	const timerStartButton = div.querySelector(".timer-start"),
-		timerStopButton = div.querySelector(".timer-stop"),
-		timerResetButton = div.querySelector(".timer-reset"),
-		timerSaveChanges = div.querySelector(".timer-settingButton"),
-		timerCloseChanges = div.querySelector(".timer-SettingClose"),
-		timerButtomCloseChanges = div.querySelector(
-			".timer-buttomCloseSetting"
-		),
-		timerClose = div.querySelector(".timer-Close");
-
-	timerStartButton.addEventListener("click", timerStart);
-	timerStopButton.addEventListener("click", timerStop);
-	timerResetButton.addEventListener("click", timerReset);
-	timerSaveChanges.addEventListener("click", makeSettings);
-	timerCloseChanges.addEventListener("click", () => {
-		loadSetting(div, item);
-	});
-	timerButtomCloseChanges.addEventListener("click", () => {
-		loadSetting(div, item);
-	});
-	timerClose.addEventListener("click", deleteTimer);
-
-	// if mouse is over the div,
-	div.addEventListener("mouseenter", addVisibleButton);
-	div.addEventListener("mouseleave", removeVisibleButton);
-	div.addEventListener("focus", getFocused);
-	div.addEventListener("blur", getBlurred);
+	createDivEvents(div, item);
 
 	// div to screen
 	const list = document.querySelector(".timer-list");
 	list.appendChild(div);
-
-	// if mouse drags div,
-	const mouseDraggable = div.querySelector(".timer-move");
-	const empty_div = document.createElement("div");
-	empty_div.id = 0;
-	empty_div.className = "timer";
-	mouseDraggable.addEventListener("dragstart", (event) => {
-		//event.target.parentNode.parentNode;
-		console.dir(event.target.parentNode.parentNode.style.position);
-		event.target.style.opacity = 0.1;
-		console.log("Dragged!");
-	});
-	mouseDraggable.addEventListener("drag", (event) => {
-		console.log(event.layerX, event.layerY);
-		list.replaceChild(div, empty_div);
-		div.style.position = "absolute";
-		div.style.top = "20px";
-		div.style.left = "20px";
-	});
-	console.dir(mouseDraggable);
 
 	// add item to local dictionary, and save
 	timerDict[id] = item;
@@ -641,6 +656,8 @@ function saveList() {
 // First Function
 function init() {
 	loadStorage();
+	previousID = focusedID = document.querySelectorAll(".timer")[0].id;
+	document.querySelectorAll(".timer")[0].classList.add("timer-focused");
 	const createTimerButton = document
 		.querySelector(".timer-create")
 		.querySelector("button");
