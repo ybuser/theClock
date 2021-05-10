@@ -16,6 +16,12 @@ function setClockNumber(timer, hour, minute, second) {
 	}`;
 }
 
+// Get totaltime, Display clock
+function setClockTotalTime(timer, totalTime) {
+	const timeObj = timesFromTotalTime(totalTime);
+	setClockNumber(timer, timeObj.hour, timeObj.minute, timeObj.second);
+}
+
 // When time's up, make alarm
 function makeAlarm(id) {
 	// alarm play
@@ -40,7 +46,7 @@ function makeAlarm(id) {
 // Make timer run, called every second
 function timerCountDown(id) {
 	// calculate remaintime
-	const remainTime = (timerDict[id].finishTime - Date.now()) / 1000;
+	const remainTime = timerDict[id].finishTime - Date.now();
 	// if not running, stop decreasing time
 	// else if negative, set 00:00, clear interval and make alarm
 	// else, show remaintime
@@ -62,19 +68,16 @@ function timerCountDown(id) {
 
 		clearInterval(intervalDict[id]);
 	} else {
-		const timeObj = timesFromTotalTime(Math.ceil(remainTime));
-		setClockNumber(
-			document.getElementById(`${id}`).querySelector(".timer-time"),
-			timeObj.hour,
-			timeObj.minute,
-			timeObj.second
+		setClockTotalTime(
+			document.getElementById(id).querySelector(".timer-time"),
+			remainTime
 		);
 	}
 }
 
 // When running, update bar
 function progressBar(id) {
-	const bar = document.getElementById(`${id}`).querySelector(".progress-bar");
+	const bar = document.getElementById(id).querySelector(".progress-bar");
 	(function innerLoop() {
 		if (timerDict[id].running) {
 			const percentage =
@@ -131,12 +134,9 @@ function timerStop(button) {
 		saveList();
 
 		// Bar setting
-		const bar = timerBody.querySelector(".progress-bar");
-		bar.style = `width: ${
-			(totalTime / timerDict[timerBody.id].totalTime) * 100
-		}%`;
-		console.log(
-			`width: ${(totalTime / timerDict[timerBody.id].totalTime) * 100}%`
+		barUpdate(
+			timerBody.querySelector(".progress-bar"),
+			timerDict[timerBody.id]
 		);
 	}
 }
@@ -151,25 +151,25 @@ function timerReset(button) {
 	// stop repeat
 	clearInterval(intervalDict[timerBody.id]);
 
-	// reset screen timer to initial setting
-	const timeObj = timesFromTotalTime(
-		timerDict[timerBody.id].totalTime / 1000
-	);
-	setClockNumber(
-		timerBody.querySelector(".timer-time"),
-		timeObj.hour,
-		timeObj.minute,
-		timeObj.second
-	);
+	// stop alarm
+	timerBody.querySelector(".timer-stopalarm").click();
 
-	// bar setting
-	const bar = timerBody.querySelector(".progress-bar");
-	bar.style = "width: 100%";
+	// reset screen timer to initial setting
+	setClockTotalTime(
+		timerBody.querySelector(".timer-time"),
+		timerDict[timerBody.id].totalTime
+	);
 
 	// settings save
 	timerDict[timerBody.id].finishTime = timerDict[timerBody.id].totalTime;
 	timerDict[timerBody.id].running = false;
 	saveList();
+
+	// bar setting
+	barUpdate(
+		timerBody.querySelector(".progress-bar"),
+		timerDict[timerBody.id]
+	);
 }
 
 // Save settings
@@ -213,9 +213,6 @@ function makeSettings(button) {
 		second
 	);
 
-	// Set bar
-	bar.style = "width: 100%";
-
 	// Save settings
 	const totalMilliSeconds = ((hour * 60 + minute) * 60 + second) * 1000;
 	timerDict[timerBody.id].finishTime = totalMilliSeconds;
@@ -225,6 +222,12 @@ function makeSettings(button) {
 	timerDict[timerBody.id].sound = selectedSound.value;
 	timerDict[timerBody.id].volume = selectedSoundVolume.valueAsNumber;
 	saveList();
+
+	// Set bar
+	barUpdate(
+		timerBody.querySelector(".progress-bar"),
+		timerDict[timerBody.id]
+	);
 
 	// Close
 	modalBody.querySelector(".timer-SettingClose").click();
@@ -240,6 +243,8 @@ function timesFromTotalTime(totalTime) {
 	// no negative time
 	if (totalTime < 0) totalTime = 0;
 
+	totalTime = Math.ceil(totalTime / 1000);
+
 	// return hour, minute, second
 	const hour = Math.floor(totalTime / 3600);
 	const minute = Math.floor((totalTime / 60) % 60);
@@ -251,13 +256,21 @@ function timesFromTotalTime(totalTime) {
 	};
 }
 
+function loadTimeSetting(div, totalTime) {
+	const timeInputs = div
+		.querySelector(".modal-body")
+		.querySelector(".time-setting-input")
+		.querySelectorAll("input");
+	const timeObj = timesFromTotalTime(totalTime);
+	timeInputs[0].value = timeObj.hour;
+	timeInputs[1].value = timeObj.minute;
+	timeInputs[2].value = timeObj.second;
+}
+
 // Fill basic settings
 function loadSetting(div, item) {
 	const modalBody = div.querySelector(".modal-body"),
 		titleInput = modalBody.querySelector(".timer-settitle"),
-		timeInputs = modalBody
-			.querySelector(".time-setting-input")
-			.querySelectorAll("input"),
 		selectSound = modalBody.querySelector(".selected-sound"),
 		soundVolumeSetting = modalBody.querySelector(".sound-volume");
 
@@ -265,11 +278,7 @@ function loadSetting(div, item) {
 	titleInput.value = item.title;
 
 	// time setting
-	const totalTime = Math.ceil(item.totalTime / 1000);
-	const timeObj = timesFromTotalTime(totalTime);
-	timeInputs[0].value = timeObj.hour;
-	timeInputs[1].value = timeObj.minute;
-	timeInputs[2].value = timeObj.second;
+	loadTimeSetting(div, item.totalTime);
 
 	// soundoption setting
 	selectSound.value = item.sound;
@@ -554,6 +563,21 @@ function createEmptyDiv() {
 	return empty_div;
 }
 
+function barUpdate(bar, item) {
+	if (item.totalTime === 0) {
+		bar.style = "width: 100%";
+	} else {
+		const finishTime = item.running
+			? item.finishTime - Date.now()
+			: item.finishTime;
+		if (finishTime < 0) {
+			bar.style = "width: 0%";
+		} else {
+			bar.style = `width: ${(finishTime * 100) / item.totalTime}%`;
+		}
+	}
+}
+
 // Make timerdiv
 function createDiv(id, item) {
 	// set div
@@ -581,25 +605,12 @@ function createDiv(id, item) {
 
 	// Clock to screen
 	const totalTime = item.running
-		? (item.finishTime - Date.now()) / 1000
-		: item.finishTime / 1000;
-
-	const timeObj = timesFromTotalTime(Math.ceil(totalTime));
-	console.log(timeObj);
-	setClockNumber(
-		div.querySelector(".timer-time"),
-		timeObj.hour,
-		timeObj.minute,
-		timeObj.second
-	);
+		? item.finishTime - Date.now()
+		: item.finishTime;
+	setClockTotalTime(div.querySelector(".timer-time"), totalTime);
 
 	// Bar to screen
-	const bar = div.querySelector(".progress-bar");
-	bar.style = `width: ${
-		item.totalTime === 0
-			? 100
-			: ((totalTime < 0 ? 0 : totalTime) / (item.totalTime / 1000)) * 100
-	}%`;
+	barUpdate(div.querySelector(".progress-bar"), item);
 
 	// Setting input with item
 	loadSetting(div, item);
@@ -617,7 +628,7 @@ function createDiv(id, item) {
 
 	// if it is running, automatically click start
 	if (item.running) {
-		timerStartButton.click();
+		div.querySelector(".timer-start").click();
 	}
 }
 
@@ -643,9 +654,13 @@ function loadStorage() {
 		return;
 	}
 
-	for (const id in item) {
-		createDiv(id, item[id]);
+	console.dir(Object.keys(item).length);
+	for (let i = 0; i < Object.keys(item).length; i++) {
+		createDiv(Object.keys(item)[i], item[Object.keys(item)[i]]);
 	}
+	/*for (const id in item) {
+		createDiv(id, item[id]);
+	}*/
 }
 
 // Save storage
@@ -653,11 +668,83 @@ function saveList() {
 	localStorage.setItem("timer", JSON.stringify(timerDict));
 }
 
+function timePlus(div, milliSeconds) {
+	// if running, return
+	if (timerDict[div.id].running) return;
+
+	// increase or decrease finishtime and totaltime & save
+	timerDict[div.id].finishTime =
+		timerDict[div.id].finishTime + milliSeconds > 0
+			? timerDict[div.id].finishTime + milliSeconds
+			: 0;
+	timerDict[div.id].totalTime =
+		timerDict[div.id].finishTime > timerDict[div.id].totalTime
+			? timerDict[div.id].finishTime
+			: timerDict[div.id].totalTime;
+	saveList();
+
+	// reflect to setting panel
+	loadTimeSetting(div, timerDict[div.id].totalTime);
+
+	// reflect to screen time
+	setClockTotalTime(
+		div.querySelector(".timer-time"),
+		timerDict[div.id].finishTime
+	);
+
+	// reflect to screen bar
+	barUpdate(div.querySelector(".progress-bar"), timerDict[div.id]);
+}
+
+function keyboardSettings(event) {
+	const div = document.getElementById(focusedID);
+	console.log(div.querySelector(".modal").classList.contains("show"));
+	if (div.querySelector(".modal").classList.contains("show")) return;
+	switch (event.keyCode) {
+		case 27: // Escape
+			div.querySelector(".timer-reset").click();
+			break;
+		case 32: // Space
+			if (timerDict[div.id].running)
+				div.querySelector(".timer-stop").click();
+			else div.querySelector(".timer-start").click();
+			break;
+		case 38: // ArrowUp (+5s)
+			timePlus(div, 5000);
+			break;
+		case 40: // ArrowDown (-5s)
+			timePlus(div, -5000);
+			break;
+		case 37: // ArrowLeft (-1min)
+			timePlus(div, -60000);
+			break;
+		case 39: // ArrowRight (+1min)
+			timePlus(div, 60000);
+			break;
+		default:
+			break;
+	}
+}
+
+function firstDivFocused() {
+	const firstDiv = document.querySelectorAll(".timer")[0];
+	firstDiv.focus();
+	previousID = focusedID = firstDiv.id;
+	firstDiv.classList.add("timer-focused");
+}
+
 // First Function
 function init() {
+	// load from local storage
 	loadStorage();
-	previousID = focusedID = document.querySelectorAll(".timer")[0].id;
-	document.querySelectorAll(".timer")[0].classList.add("timer-focused");
+
+	// make first div focused
+	firstDivFocused();
+
+	// listen user's keyboard
+	document.addEventListener("keydown", keyboardSettings);
+
+	// user clicks "create new timer" button
 	const createTimerButton = document
 		.querySelector(".timer-create")
 		.querySelector("button");
