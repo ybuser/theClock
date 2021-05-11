@@ -465,7 +465,7 @@ function createDiv(id, item) {
 function loadStorage() {
 	const item = JSON.parse(localStorage.getItem("timer"));
 
-	if (!item || Object.keys(item).length === 0) {
+	if (Object.keys(item).length === 0) {
 		createCurDiv();
 		return;
 	}
