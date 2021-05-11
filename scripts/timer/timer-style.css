@@ -5,3 +5,16 @@
 	justify-content: space-between;
 	padding: 1rem 1rem;
 }
+
+.timer {
+	height: 200px;
+	width: 100%;
+}
+
+.timer-list {
+	position: relative;
+}
+
+.timer-focused {
+	background-color: #7ed6df;
+}
