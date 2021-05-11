@@ -1,6 +1,7 @@
 const VALIDATED = "was-validated";
 
 let timerDict = {},
+	timerList = [],
 	intervalDict = {},
 	soundDict = {};
 
@@ -33,14 +34,26 @@ function makeAlarm(id) {
 	const stopAlarmButton = document
 		.getElementById(`${id}`)
 		.querySelector(".timer-stopalarm");
-	stopAlarmButton.addEventListener("click", () => {
+	stopAlarmButton.style = "display: inline-block";
+
+	const stopAlarm = function () {
+		// Delete Eventlistener
+		stopAlarmButton.removeEventListener("click", stopAlarm);
+
+		// Click Reset button
+		document.getElementById(id).querySelector(".timer-reset").click();
+
 		// Make div focused
 		makeDivFocused(document.getElementById(id));
 
 		// Alarm off
 		alarm.pause();
 		alarm.currentTime = 0;
-	});
+
+		// hide button
+		stopAlarmButton.style = "display: none";
+	};
+	stopAlarmButton.addEventListener("click", stopAlarm);
 }
 
 // Make timer run, called every second
@@ -117,6 +130,10 @@ function timerStart(button) {
 
 	// move progress bar
 	progressBar(timerBody.id);
+
+	// Hide start button, Display Stop button
+	timerBody.querySelector(".timer-start").style = "display: none";
+	timerBody.querySelector(".timer-stop").style = "display: inline-block";
 }
 
 // Timer Stop Function
@@ -139,11 +156,18 @@ function timerStop(button) {
 			timerDict[timerBody.id]
 		);
 	}
+	// Hide stop button, Display start button
+	timerBody.querySelector(".timer-start").style = "display: inline-block";
+	timerBody.querySelector(".timer-stop").style = "display: none";
 }
 
 // Timer Reset Function
 function timerReset(button) {
 	const timerBody = button.target.parentNode;
+
+	// click Stop button
+	timerBody.querySelector(".timer-stop").click();
+	console.log(timerBody.querySelector(".timer-stop"));
 
 	// Make div focused
 	makeDivFocused(timerBody);
@@ -530,6 +554,10 @@ function createDivEvents(div, item) {
 		div.focus();
 	});
 
+	// initial display
+	timerStopButton.style = "display: none";
+	timerStopAlarmButton.style = "display: none";
+
 	// if mouse is over the div,
 	div.addEventListener("mouseenter", addVisibleButton);
 	div.addEventListener("mouseleave", removeVisibleButton);
@@ -623,7 +651,9 @@ function createDiv(id, item) {
 	list.appendChild(div);
 
 	// add item to local dictionary, and save
+	// OLD, to be replaced
 	timerDict[id] = item;
+	timerList.push(id);
 	saveList();
 
 	// if it is running, automatically click start
@@ -639,33 +669,45 @@ function deleteTimer(button) {
 	timerBody.remove();
 
 	// Delete storage, dictionary
+	// OLD, to be replaced
 	delete timerDict[timerBody.id];
 	delete intervalDict[timerBody.id];
 	delete soundDict[timerBody.id];
+	timerList = timerList.filter((ele) => {
+		return ele !== parseInt(timerBody.id);
+	});
 	saveList();
 }
 
 // Load storage
 function loadStorage() {
-	const item = JSON.parse(localStorage.getItem("timer"));
+	const itemDict = JSON.parse(localStorage.getItem("timer")),
+		itemList = JSON.parse(localStorage.getItem("timerList"));
 
-	if (!item || Object.keys(item).length === 0) {
+	if (
+		!itemDict ||
+		Object.keys(itemDict).length === 0 ||
+		!itemList ||
+		itemList.length === 0
+	) {
 		createCurDiv();
 		return;
 	}
 
-	console.dir(Object.keys(item).length);
-	for (let i = 0; i < Object.keys(item).length; i++) {
-		createDiv(Object.keys(item)[i], item[Object.keys(item)[i]]);
+	for (let i in itemList) {
+		if (!itemDict[itemList[i]]) continue;
+		createDiv(itemList[i], itemDict[itemList[i]]);
 	}
-	/*for (const id in item) {
-		createDiv(id, item[id]);
-	}*/
+
+	if (document.querySelector(".timer-list").childNodes.length === 0) {
+		createCurDiv();
+	}
 }
 
 // Save storage
 function saveList() {
 	localStorage.setItem("timer", JSON.stringify(timerDict));
+	localStorage.setItem("timerList", JSON.stringify(timerList));
 }
 
 function timePlus(div, milliSeconds) {
@@ -698,7 +740,6 @@ function timePlus(div, milliSeconds) {
 
 function keyboardSettings(event) {
 	const div = document.getElementById(focusedID);
-	console.log(div.querySelector(".modal").classList.contains("show"));
 	if (div.querySelector(".modal").classList.contains("show")) return;
 	switch (event.keyCode) {
 		case 27: // Escape
