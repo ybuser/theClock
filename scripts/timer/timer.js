@@ -165,10 +165,6 @@ function timerStop(button) {
 function timerReset(button) {
 	const timerBody = button.target.parentNode;
 
-	// click Stop button
-	timerBody.querySelector(".timer-stop").click();
-	console.log(timerBody.querySelector(".timer-stop"));
-
 	// Make div focused
 	makeDivFocused(timerBody);
 
@@ -309,6 +305,7 @@ function loadSetting(div, item) {
 
 	// soundvolume setting
 	soundVolumeSetting.value = item.volume;
+	modalBody.querySelector(".timer-soundstop").click();
 
 	// Make div focused
 	makeDivFocused(div);
@@ -374,7 +371,7 @@ function setDiv(div, id, item) {
 						></button>
 					</div>
 					<div class="modal-body">
-						<div class="timer-settitle">
+						<div class="mb-2 ps-2 pe-2 timer-settitle">
 							<label
 								for="timer-titleinput"
 								class="col-form-label"
@@ -392,7 +389,7 @@ function setDiv(div, id, item) {
 							/>
 							<div class="invalid-feedback">Please enter a title.</div>
 						</div>
-						<div class="mb-3 time-setting">
+						<div class="mb-2 ps-2 pe-2 time-setting">
 							<label for="time-setting-input" class="col-form-label"
 								>Time:</label
 							>
@@ -426,7 +423,7 @@ function setDiv(div, id, item) {
 								</div>
 							</div>
 						</div>
-						<div>
+						<div class="mb-2 ps-2 pe-2">
 							<label for="selected-sound" class="col-form-label"
 								>Select Sound</label
 							>
@@ -440,19 +437,23 @@ function setDiv(div, id, item) {
 								<option value="Sound4">Sound4</option>
 							</select>
 						</div>
-						<div>
-							<label for="customRange2" class="form-label"
+						<div class="ps-2 pe-2">
+							<label for="customRange2" class="col-form-label"
 								>Sound Volume</label
 							>
-							<input
-								type="range"
-								class="form-range sound-volume"
-								min="0"
-								max="1"
-								step="0.01"
-								value="${volume}"
-								id="customRange2"
-							/>
+							<div style="display: flex; " class="align-items-center">
+								<input
+									type="range"
+									class="form-range sound-volume"
+									min="0"
+									max="1"
+									step="0.01"
+									value="${volume}"
+									id="customRange2"
+								/>
+								<button type="button" class="btn btn-light ms-2 timer-soundplay"><i class="bi bi-volume-up-fill"></i></button>
+								<button type="button" class="btn btn-light ms-2 timer-soundstop" style="display:none"><i class="bi bi-volume-mute-fill"></i></button>
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -526,6 +527,33 @@ function makeDivFocused(div) {
 	div.focus();
 }
 
+// about setting panel, sound preview
+function settingSoundPreview(event) {
+	const modalBody = event.target.closest("div.modal-body"),
+		selectedSound = modalBody.querySelector(".selected-sound"),
+		selectedSoundVolume = modalBody.querySelector(".sound-volume"),
+		audioPreview = new Audio(`./sound/${selectedSound.value}.mp3`);
+	audioPreview.volume = selectedSoundVolume.valueAsNumber;
+	audioPreview.play();
+
+	// stop button event
+	const timerSoundStopButton = modalBody.querySelector(".timer-soundstop"),
+		timerSoundStartButton = modalBody.querySelector(".timer-soundplay");
+
+	timerSoundStartButton.style = "display:none";
+	timerSoundStopButton.style = "";
+
+	const audioPreviewStop = function () {
+		audioPreview.pause();
+		audioPreview.currentTime = 0;
+
+		timerSoundStartButton.style = "";
+		timerSoundStopButton.style = "display:none";
+		timerSoundStopButton.removeEventListener("click", audioPreviewStop);
+	};
+	timerSoundStopButton.addEventListener("click", audioPreviewStop);
+}
+
 // Assign event to buttons
 function createDivEvents(div, item) {
 	const timerStartButton = div.querySelector(".timer-start"),
@@ -537,7 +565,9 @@ function createDivEvents(div, item) {
 			".timer-buttomCloseSetting"
 		),
 		timerClose = div.querySelector(".timer-Close"),
-		timerStopAlarmButton = div.querySelector(".timer-stopalarm");
+		timerStopAlarmButton = div.querySelector(".timer-stopalarm"),
+		timerSoundStartButton = div.querySelector(".timer-soundplay"),
+		timerSoundStopButton = div.querySelector(".timer-soundstop");
 
 	timerStartButton.addEventListener("click", timerStart);
 	timerStopButton.addEventListener("click", timerStop);
@@ -553,6 +583,8 @@ function createDivEvents(div, item) {
 	timerStopAlarmButton.addEventListener("click", () => {
 		div.focus();
 	});
+	timerSoundStartButton.addEventListener("click", settingSoundPreview);
+	timerSoundStopButton.addEventListener("click", () => {});
 
 	// initial display
 	timerStopButton.style = "display: none";
@@ -566,7 +598,7 @@ function createDivEvents(div, item) {
 	// if mouse drags div,
 	const empty_div = createEmptyDiv(),
 		mouseDraggable = div.querySelector(".timer-move");
-
+	/*
 	mouseDraggable.addEventListener("dragstart", (event) => {
 		//event.target.parentNode.parentNode;
 		console.dir(event.target.parentNode.parentNode.style.position);
@@ -579,6 +611,41 @@ function createDivEvents(div, item) {
 		div.style.position = "absolute";
 		div.style.top = "20px";
 		div.style.left = "20px";
+	});*/
+
+	/* code from https://www.w3schools.com/howto/howto_js_draggable.asp */
+	console.log(mouseDraggable);
+	mouseDraggable.addEventListener("mousedown", (e) => {
+		div.style.position = "absolute";
+		let pos1 = 0,
+			pos2 = 0,
+			pos3 = 0,
+			pos4 = 0;
+		e = e || window.event;
+		e.preventDefault();
+		pos3 = e.clientX;
+		pos4 = e.clientY;
+		document.addEventListener("mouseup", closeDragElement);
+		document.addEventListener("mousemove", elementDrag);
+
+		function elementDrag(ele) {
+			ele = ele || window.event;
+			ele.preventDefault();
+			pos1 = pos3 - ele.clientX;
+			pos2 = pos4 - ele.clientY;
+			pos3 = ele.clientX;
+			pos4 = ele.clientY;
+			div.style.top = div.offsetTop - pos2 + "px";
+			div.style.left = div.offsetLeft - pos1 + "px";
+		}
+
+		function closeDragElement() {
+			document.removeEventListener("mouseup", closeDragElement);
+			document.removeEventListener("mousemove", elementDrag);
+		}
+	});
+	div.addEventListener("mouseenter", (ele) => {
+		console.log(div.id);
 	});
 }
 
@@ -591,6 +658,7 @@ function createEmptyDiv() {
 	return empty_div;
 }
 
+// bar update
 function barUpdate(bar, item) {
 	if (item.totalTime === 0) {
 		bar.style = "width: 100%";
@@ -710,6 +778,7 @@ function saveList() {
 	localStorage.setItem("timerList", JSON.stringify(timerList));
 }
 
+// plus time
 function timePlus(div, milliSeconds) {
 	// if running, return
 	if (timerDict[div.id].running) return;
@@ -738,6 +807,7 @@ function timePlus(div, milliSeconds) {
 	barUpdate(div.querySelector(".progress-bar"), timerDict[div.id]);
 }
 
+// keyboard input
 function keyboardSettings(event) {
 	const div = document.getElementById(focusedID);
 	if (div.querySelector(".modal").classList.contains("show")) return;
@@ -767,6 +837,7 @@ function keyboardSettings(event) {
 	}
 }
 
+// first launched, make first div focused
 function firstDivFocused() {
 	const firstDiv = document.querySelectorAll(".timer")[0];
 	firstDiv.focus();
