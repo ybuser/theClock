@@ -18,3 +18,16 @@
 .timer-focused {
 	background-color: #7ed6df;
 }
+
+.timer-title {
+	border: none;
+	background: none;
+}
+
+.timer-title:focus {
+	outline: none;
+}
+
+.timer-title.get-input {
+	border-bottom: 1px solid black;
+}

@@ -44,11 +44,15 @@ function makeAlarm(id) {
 		document.getElementById(id).querySelector(".timer-reset").click();
 
 		// Make div focused
-		makeDivFocused(document.getElementById(id));
+		document.getElementById(id).focus();
 
 		// Alarm off
 		alarm.pause();
 		alarm.currentTime = 0;
+
+		// setting save
+		timerDict[id].running = false;
+		saveList();
 
 		// hide button
 		stopAlarmButton.style = "display: none";
@@ -67,7 +71,7 @@ function timerCountDown(id) {
 		clearInterval(intervalDict[id]);
 	} else if (remainTime < 0) {
 		setClockNumber(
-			document.getElementById(`${id}`).querySelector(".timer-time"),
+			document.getElementById(id).querySelector(".timer-time"),
 			0,
 			0,
 			0
@@ -76,7 +80,6 @@ function timerCountDown(id) {
 		makeAlarm(id);
 
 		timerDict[id].finishTime = 0;
-		timerDict[id].running = false;
 		saveList();
 
 		clearInterval(intervalDict[id]);
@@ -107,7 +110,7 @@ function timerStart(button) {
 	const timerBody = button.target.parentNode;
 
 	// Make div focused
-	makeDivFocused(timerBody);
+	timerBody.focus();
 
 	if (timerDict[timerBody.id].finishTime === 0) {
 		console.log("You can't start timer when it's 0:00");
@@ -141,7 +144,10 @@ function timerStop(button) {
 	const timerBody = button.target.parentNode;
 
 	// Make div focused
-	makeDivFocused(timerBody);
+	timerBody.focus();
+
+	// timer sound stop
+	timerBody.querySelector(".timer-stopalarm").click();
 
 	// Change setting and save
 	if (timerDict[timerBody.id].running) {
@@ -166,10 +172,11 @@ function timerReset(button) {
 	const timerBody = button.target.parentNode;
 
 	// Make div focused
-	makeDivFocused(timerBody);
+	timerBody.focus();
 
 	// stop repeat
 	clearInterval(intervalDict[timerBody.id]);
+	timerBody.querySelector(".timer-stop").click();
 
 	// stop alarm
 	timerBody.querySelector(".timer-stopalarm").click();
@@ -308,7 +315,7 @@ function loadSetting(div, item) {
 	modalBody.querySelector(".timer-soundstop").click();
 
 	// Make div focused
-	makeDivFocused(div);
+	div.focus();
 }
 
 // div html content
@@ -320,7 +327,7 @@ function setDiv(div, id, item) {
 		volume = item.volume;
 	div.innerHTML = `
 	<div class="timer-header">
-		<p class="timer-title">${title}</p>
+		<input type="text" value="${title}" class="timer-title" readonly="true">
 		<i class="bi bi-arrows-move timer-move p-4" style="cursor: move; visibility: hidden;" draggable=true></i>
 		<button
 			type="button"
@@ -522,11 +529,6 @@ function getFocused(event) {
 	}
 }
 
-// make div focused
-function makeDivFocused(div) {
-	div.focus();
-}
-
 // about setting panel, sound preview
 function settingSoundPreview(event) {
 	const modalBody = event.target.closest("div.modal-body"),
@@ -556,9 +558,11 @@ function settingSoundPreview(event) {
 
 // Assign event to buttons
 function createDivEvents(div, item) {
-	const timerStartButton = div.querySelector(".timer-start"),
+	const timerTitle = div.querySelector(".timer-title"),
+		timerStartButton = div.querySelector(".timer-start"),
 		timerStopButton = div.querySelector(".timer-stop"),
 		timerResetButton = div.querySelector(".timer-reset"),
+		timerSettingButton = div.querySelector(".timer-settingOpen"),
 		timerSaveChanges = div.querySelector(".timer-settingButton"),
 		timerCloseChanges = div.querySelector(".timer-SettingClose"),
 		timerButtomCloseChanges = div.querySelector(
@@ -569,9 +573,36 @@ function createDivEvents(div, item) {
 		timerSoundStartButton = div.querySelector(".timer-soundplay"),
 		timerSoundStopButton = div.querySelector(".timer-soundstop");
 
+	timerTitle.addEventListener("click", () => {
+		if (!div.classList.contains("timer-focused")) div.focus();
+	});
+	timerTitle.addEventListener("dblclick", () => {
+		console.log(timerTitle.readOnly);
+		timerTitle.readOnly = "";
+		timerTitle.classList.add("get-input");
+	});
+	timerTitle.addEventListener("keydown", (ele) => {
+		if (
+			ele.code === "Escape" ||
+			ele.code === "Enter" ||
+			ele.code === "NumpadEnter"
+		) {
+			timerTitle.blur();
+		}
+	});
+	timerTitle.addEventListener("blur", () => {
+		timerTitle.readOnly = "true";
+		timerTitle.classList.remove("get-input");
+		timerDict[div.id].title = timerTitle.value;
+		saveList();
+	});
+
 	timerStartButton.addEventListener("click", timerStart);
 	timerStopButton.addEventListener("click", timerStop);
 	timerResetButton.addEventListener("click", timerReset);
+	timerSettingButton.addEventListener("click", () => {
+		div.focus();
+	});
 	timerSaveChanges.addEventListener("click", makeSettings);
 	timerCloseChanges.addEventListener("click", () => {
 		loadSetting(div, item);
@@ -596,33 +627,22 @@ function createDivEvents(div, item) {
 	div.addEventListener("focus", getFocused);
 
 	// if mouse drags div,
-	const empty_div = createEmptyDiv(),
-		mouseDraggable = div.querySelector(".timer-move");
-	/*
-	mouseDraggable.addEventListener("dragstart", (event) => {
-		//event.target.parentNode.parentNode;
-		console.dir(event.target.parentNode.parentNode.style.position);
-		event.target.style.opacity = 0.1;
-		console.log("Dragged!");
-	});
-	mouseDraggable.addEventListener("drag", (event) => {
-		console.log(event.layerX, event.layerY);
-		list.replaceChild(div, empty_div);
-		div.style.position = "absolute";
-		div.style.top = "20px";
-		div.style.left = "20px";
-	});*/
+	const mouseDraggable = div.querySelector(".timer-move");
 
 	/* code from https://www.w3schools.com/howto/howto_js_draggable.asp */
-	console.log(mouseDraggable);
 	mouseDraggable.addEventListener("mousedown", (e) => {
-		div.style.position = "absolute";
+		div.focus();
 		let pos1 = 0,
 			pos2 = 0,
 			pos3 = 0,
-			pos4 = 0;
+			pos4 = 0,
+			index = timerList.indexOf(parseInt(div.id));
+		const empty_div = createEmptyDiv(),
+			list = document.querySelector(".timer-list");
 		e = e || window.event;
 		e.preventDefault();
+		div.style.position = "absolute";
+		list.insertBefore(empty_div, div.nextSibling);
 		pos3 = e.clientX;
 		pos4 = e.clientY;
 		document.addEventListener("mouseup", closeDragElement);
@@ -637,15 +657,44 @@ function createDivEvents(div, item) {
 			pos4 = ele.clientY;
 			div.style.top = div.offsetTop - pos2 + "px";
 			div.style.left = div.offsetLeft - pos1 + "px";
+
+			if (div.offsetTop - pos2 - empty_div.offsetTop > 150) {
+				if (empty_div.nextSibling) {
+					empty_div.nextSibling.after(empty_div);
+					empty_div.before(div);
+					[timerList[index], timerList[index + 1]] = [
+						timerList[index + 1],
+						timerList[index],
+					];
+					index++;
+					saveList();
+				}
+			} else if (div.offsetTop - pos2 - empty_div.offsetTop < -50) {
+				if (empty_div.previousSibling.previousSibling) {
+					if (empty_div.previousSibling == div) {
+						empty_div.previousSibling.previousSibling.before(
+							empty_div
+						);
+					} else empty_div.previousSibling.before(empty_div);
+					[timerList[index], timerList[index - 1]] = [
+						timerList[index - 1],
+						timerList[index],
+					];
+					index--;
+					saveList();
+					empty_div.before(div);
+				}
+			}
 		}
 
 		function closeDragElement() {
 			document.removeEventListener("mouseup", closeDragElement);
 			document.removeEventListener("mousemove", elementDrag);
+			div.style.position = "";
+			div.style.top = "";
+			div.style.left = "";
+			empty_div.remove();
 		}
-	});
-	div.addEventListener("mouseenter", (ele) => {
-		console.log(div.id);
 	});
 }
 
@@ -810,7 +859,12 @@ function timePlus(div, milliSeconds) {
 // keyboard input
 function keyboardSettings(event) {
 	const div = document.getElementById(focusedID);
-	if (div.querySelector(".modal").classList.contains("show")) return;
+	if (
+		div.querySelector(".modal").classList.contains("show") ||
+		div.querySelector(".timer-title").classList.contains("get-input")
+	)
+		return;
+
 	switch (event.keyCode) {
 		case 27: // Escape
 			div.querySelector(".timer-reset").click();
