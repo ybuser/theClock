@@ -765,7 +765,7 @@ function createDiv(id, item) {
 
 	// div to screen
 	const list = document.querySelector(".timer-list");
-	list.appendChild(div);
+	list.querySelector(".timer-create").before(div);
 
 	// add item to local dictionary, and save
 	// OLD, to be replaced

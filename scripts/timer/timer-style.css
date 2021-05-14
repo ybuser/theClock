@@ -31,3 +31,51 @@
 .timer-title.get-input {
 	border-bottom: 1px solid black;
 }
+
+.timer-sidebar {
+	height: 100%;
+	width: 100px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #7951c5;
+	overflow-x: hidden;
+	padding-top: 20px;
+}
+
+.timer-main {
+	flex-grow: 1.5;
+	flex-shrink: 0;
+	flex-basis: 0;
+	padding-left: 100px;
+}
+
+.timer-list {
+	flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 0;
+}
+
+.timer-body {
+	display: flex;
+}
+
+.menu-button {
+	flex-direction: column;
+	display: inline-flex;
+	margin: 25px 25px;
+}
+
+.image-size {
+	width: 50px;
+	height: 50px;
+	font-size: 50px;
+	text-align: center;
+	vertical-align: middle;
+	color: black;
+}
+
+.image-size:hover {
+	color: #333333;
+}
