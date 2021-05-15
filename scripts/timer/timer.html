@@ -26,14 +26,21 @@
 				<a class="menu-button" href="../stopwatch/stopwatch.html"
 					><i class="bi bi-stopwatch image-size"></i
 				></a>
-				<a class="menu-button"
-					><i class="bi bi-hourglass-split image-size"></i
+				<a class="menu-button" href="timer.html"
+					><i class="bi bi-hourglass-split image-selected"></i
 				></a>
 			</div>
-			<div class="timer-main">00:00</div>
-			<div class="timer-list overflow-auto" style="max-height: 95vh">
+			<div class="timer-main" style="display: none">
+				<p class="timer-main-title">Title 1</p>
+				<p class="timer-main-timer">00:00</p>
+				<p class="timer-main-bar"></p>
+				<p class="timer-main-start"></p>
+				<p class="timer-main-stop"></p>
+				<p class="timer-main-reset"></p>
+			</div>
+			<div class="timer-list overflow-auto" style="margin-left: 100px">
 				<div class="timer-create">
-					<button>Create New Timer</button>
+					<button><i class="bi bi-plus"></i>Create New Timer</button>
 				</div>
 			</div>
 		</div>

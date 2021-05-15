@@ -1,22 +1,115 @@
+.timer-body {
+	display: flex;
+	background-color: #2d3436;
+	min-height: 100vh;
+	max-height: 100vh;
+}
+
+/** side bar **/
+
+.timer-sidebar {
+	height: 100%;
+	width: 100px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #1e272e;
+	overflow-x: hidden;
+	padding-top: 20px;
+	border-right: solid white;
+}
+
+.menu-button {
+	flex-direction: column;
+	display: inline-flex;
+	margin: 25px 25px;
+}
+
+.image-selected {
+	width: 50px;
+	height: 50px;
+	font-size: 50px;
+	text-align: center;
+	vertical-align: middle;
+	color: #ffb142;
+}
+
+.image-selected:hover {
+	color: #cc8e35;
+}
+
+.image-size {
+	width: 50px;
+	height: 50px;
+	font-size: 50px;
+	text-align: center;
+	vertical-align: middle;
+	color: #f7f1e3;
+}
+
+.image-size:hover {
+	color: #aaa69d;
+}
+
+/** timer-middle **/
+.timer-main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	flex-grow: 1.5;
+	flex-shrink: 0;
+	flex-basis: 0;
+	padding-left: 100px;
+	border-right: solid #f7f1e3;
+	color: white;
+}
+
+.timer-main-title {
+}
+
+.timer-main-timer {
+}
+
+.timer-main-start {
+}
+
+.timer-main-stop {
+}
+
+.timer-main-reset {
+}
+
+.timer-main-bar {
+}
+
+/** timer-list **/
+
+.timer-list {
+	position: relative;
+	flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 0;
+	max-height: 100vh;
+}
+
+.timer {
+	height: 200px;
+	width: 100%;
+	color: white;
+}
+
+.timer-focused {
+	background-color: #7ed6df;
+}
+
 .timer-header {
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
 	padding: 1rem 1rem;
-}
-
-.timer {
-	height: 200px;
-	width: 100%;
-}
-
-.timer-list {
-	position: relative;
-}
-
-.timer-focused {
-	background-color: #7ed6df;
 }
 
 .timer-title {
@@ -32,50 +125,16 @@
 	border-bottom: 1px solid black;
 }
 
-.timer-sidebar {
-	height: 100%;
-	width: 100px;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: #7951c5;
-	overflow-x: hidden;
-	padding-top: 20px;
+.timer-empty {
+	border: 2px dashed #ffda79;
+	background-color: none;
 }
 
-.timer-main {
-	flex-grow: 1.5;
-	flex-shrink: 0;
-	flex-basis: 0;
-	padding-left: 100px;
-}
-
-.timer-list {
-	flex-grow: 1;
-	flex-shrink: 0;
-	flex-basis: 0;
-}
-
-.timer-body {
-	display: flex;
-}
-
-.menu-button {
-	flex-direction: column;
-	display: inline-flex;
-	margin: 25px 25px;
-}
-
-.image-size {
-	width: 50px;
-	height: 50px;
-	font-size: 50px;
-	text-align: center;
-	vertical-align: middle;
-	color: black;
-}
-
-.image-size:hover {
-	color: #333333;
+.timer-create button {
+	width: 100%;
+	height: 200px;
+	background-color: #1e272e;
+	border: 2px solid #ffda79;
+	color: azure;
+	font-size: xx-large;
 }

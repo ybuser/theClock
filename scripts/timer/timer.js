@@ -326,9 +326,9 @@ function setDiv(div, id, item) {
 	const title = item.title,
 		volume = item.volume;
 	div.innerHTML = `
-	<div class="timer-header">
+	<div class="timer-header" style="margin-left:auto; margin-right:auto;">
 		<input type="text" value="${title}" class="timer-title" readonly="true">
-		<i class="bi bi-arrows-move timer-move p-4" style="cursor: move; visibility: hidden;" draggable=true></i>
+		<i class="bi bi-arrows-move timer-move p-4" style="cursor: move; visibility: hidden; " draggable=true></i>
 		<button
 			type="button"
 			class="btn-close timer-Close"
@@ -659,7 +659,10 @@ function createDivEvents(div, item) {
 			div.style.left = div.offsetLeft - pos1 + "px";
 
 			if (div.offsetTop - pos2 - empty_div.offsetTop > 150) {
-				if (empty_div.nextSibling) {
+				if (
+					empty_div.nextSibling &&
+					!empty_div.nextSibling.classList.contains("timer-create")
+				) {
 					empty_div.nextSibling.after(empty_div);
 					empty_div.before(div);
 					[timerList[index], timerList[index + 1]] = [
@@ -702,7 +705,7 @@ function createDivEvents(div, item) {
 function createEmptyDiv() {
 	const empty_div = document.createElement("div");
 	empty_div.id = Object.keys(timerDict).length;
-	empty_div.className = "timer";
+	empty_div.className = "timer timer-empty";
 
 	return empty_div;
 }
