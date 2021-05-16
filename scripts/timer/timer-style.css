@@ -1,6 +1,6 @@
 .timer-body {
 	display: flex;
-	background-color: #2d3436;
+	/*background-color: #2d3436;*/
 	min-height: 100vh;
 	max-height: 100vh;
 }
@@ -62,14 +62,18 @@
 	flex-shrink: 0;
 	flex-basis: 0;
 	padding-left: 100px;
-	border-right: solid #f7f1e3;
-	color: white;
+
+	color: #dcdef5;
 }
 
 .timer-main-title {
+	color: black;
+	font-size: 100px;
 }
 
 .timer-main-timer {
+	color: black;
+	font-size: 100px;
 }
 
 .timer-main-start {
@@ -87,21 +91,24 @@
 /** timer-list **/
 
 .timer-list {
-	position: relative;
+	/*position: relative;*/
 	flex-grow: 1;
 	flex-shrink: 0;
 	flex-basis: 0;
 	max-height: 100vh;
+	border-radius: 30px;
+	background: linear-gradient(to right, #2e335b, #17182c);
 }
 
 .timer {
-	height: 200px;
+	height: 180px;
 	width: 100%;
 	color: white;
+	padding: 0rem 1rem;
 }
 
 .timer-focused {
-	background-color: #7ed6df;
+	background-color: #17182c;
 }
 
 .timer-header {
@@ -109,12 +116,17 @@
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
-	padding: 1rem 1rem;
+}
+
+.timer-Close {
+	color: white;
+	fill: white;
 }
 
 .timer-title {
 	border: none;
 	background: none;
+	color: white;
 }
 
 .timer-title:focus {
@@ -125,16 +137,25 @@
 	border-bottom: 1px solid black;
 }
 
+.progress {
+	margin-bottom: 10px;
+	height: 8px !important;
+}
+
 .timer-empty {
 	border: 2px dashed #ffda79;
 	background-color: none;
 }
 
+.timer-create {
+	width: 100%;
+	height: 200px;
+}
+
 .timer-create button {
 	width: 100%;
 	height: 200px;
-	background-color: #1e272e;
-	border: 2px solid #ffda79;
+	background: none;
 	color: azure;
 	font-size: xx-large;
 }

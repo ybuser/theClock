@@ -331,13 +331,13 @@ function setDiv(div, id, item) {
 		<i class="bi bi-arrows-move timer-move p-4" style="cursor: move; visibility: hidden; " draggable=true></i>
 		<button
 			type="button"
-			class="btn-close timer-Close"
-			style="visibility: hidden;"
+			class="btn-close btn-close-white timer-Close"
+			style="visibility: hidden; color: white;"
 		></button>
 	</div>
 	<h3 class="timer-time">00 : 00</h3>
 	<div class="progress">
-  		<div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+		<div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 	</div>
 	<button type="button" class="btn btn-success timer-start">Start</button>
 	<button type="button" class="btn btn-danger timer-stop">Stop</button>
@@ -644,37 +644,51 @@ function createDivEvents(div, item) {
 		div.style.position = "absolute";
 		list.insertBefore(empty_div, div.nextSibling);
 		pos3 = e.clientX;
-		pos4 = e.clientY;
+		pos4 = e.clientY + list.scrollTop;
+		console.log(pos3, pos4);
 		document.addEventListener("mouseup", closeDragElement);
 		document.addEventListener("mousemove", elementDrag);
-
+		document.addEventListener("scroll", (ele) => {
+			console.log(ele);
+		});
+		div.style.top = div.offsetTop - list.scrollTop + "px";
 		function elementDrag(ele) {
 			ele = ele || window.event;
 			ele.preventDefault();
 			pos1 = pos3 - ele.clientX;
-			pos2 = pos4 - ele.clientY;
+			pos2 = pos4 - (ele.clientY + list.scrollTop);
 			pos3 = ele.clientX;
-			pos4 = ele.clientY;
+			pos4 = ele.clientY + list.scrollTop;
 			div.style.top = div.offsetTop - pos2 + "px";
 			div.style.left = div.offsetLeft - pos1 + "px";
 
-			if (div.offsetTop - pos2 - empty_div.offsetTop > 150) {
+			if (
+				div.offsetTop - pos2 - (empty_div.offsetTop - list.scrollTop) >
+				180
+			) {
 				if (
 					empty_div.nextSibling &&
 					!empty_div.nextSibling.classList.contains("timer-create")
 				) {
+					const scrolled = list.scrollTop;
 					empty_div.nextSibling.after(empty_div);
-					empty_div.before(div);
+					//empty_div.before(div);
 					[timerList[index], timerList[index + 1]] = [
 						timerList[index + 1],
 						timerList[index],
 					];
 					index++;
 					saveList();
+					list.scrollTop = scrolled;
+					console.log(empty_div.offsetTop, list.scrollTop);
 				}
-			} else if (div.offsetTop - pos2 - empty_div.offsetTop < -50) {
-				if (empty_div.previousSibling.previousSibling) {
-					if (empty_div.previousSibling == div) {
+			} else if (
+				div.offsetTop - pos2 - (empty_div.offsetTop - list.scrollTop) <
+				-100
+			) {
+				if (index !== 0) {
+					const scrolled = list.scrollTop;
+					if (empty_div.previousSibling === div) {
 						empty_div.previousSibling.previousSibling.before(
 							empty_div
 						);
@@ -685,7 +699,9 @@ function createDivEvents(div, item) {
 					];
 					index--;
 					saveList();
-					empty_div.before(div);
+					//empty_div.before(div);
+					list.scrollTop = scrolled;
+					console.log(empty_div.offsetTop, list.scrollTop);
 				}
 			}
 		}
@@ -696,6 +712,7 @@ function createDivEvents(div, item) {
 			div.style.position = "";
 			div.style.top = "";
 			div.style.left = "";
+			empty_div.before(div);
 			empty_div.remove();
 		}
 	});
@@ -768,6 +785,7 @@ function createDiv(id, item) {
 
 	// div to screen
 	const list = document.querySelector(".timer-list");
+	//list.appendChild(div);
 	list.querySelector(".timer-create").before(div);
 
 	// add item to local dictionary, and save
@@ -819,6 +837,7 @@ function loadStorage() {
 		createDiv(itemList[i], itemDict[itemList[i]]);
 	}
 
+	console.log(document.querySelector(".timer-list").childNodes.length);
 	if (document.querySelector(".timer-list").childNodes.length === 0) {
 		createCurDiv();
 	}
