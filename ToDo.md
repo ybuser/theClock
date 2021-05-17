@@ -4,8 +4,7 @@
 - [ ] readme.md 파일 양식에 맞게 적기
 - [ ] 깃허브 다양한 기능 사용해보기
 
-### function
-
+### Functions
 #### Timer
 
 -   [x] 시간 띄우기
