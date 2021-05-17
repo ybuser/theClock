@@ -14,10 +14,10 @@
 	z-index: 1;
 	top: 0;
 	left: 0;
-	background-color: #1e272e;
+	background-color: rgba(255, 255, 255, 0.5);
 	overflow-x: hidden;
 	padding-top: 20px;
-	border-right: solid white;
+	/*border-right: solid white;*/
 }
 
 .menu-button {
@@ -32,11 +32,11 @@
 	font-size: 50px;
 	text-align: center;
 	vertical-align: middle;
-	color: #ffb142;
+	/*color: #ffb142;*/
 }
 
 .image-selected:hover {
-	color: #cc8e35;
+	/*color: #cc8e35;*/
 }
 
 .image-size {
@@ -45,11 +45,11 @@
 	font-size: 50px;
 	text-align: center;
 	vertical-align: middle;
-	color: #f7f1e3;
+	color: black;
 }
 
 .image-size:hover {
-	color: #aaa69d;
+	color: #36373b;
 }
 
 /** timer-middle **/
@@ -90,14 +90,16 @@
 
 /** timer-list **/
 
-.timer-list {
-	/*position: relative;*/
+.timer-list-wrapper {
 	flex-grow: 1;
 	flex-shrink: 0;
 	flex-basis: 0;
 	max-height: 100vh;
-	border-radius: 30px;
-	background: linear-gradient(to right, #2e335b, #17182c);
+	background: linear-gradient(to right, #529bff, #b193f7);
+}
+.timer-list {
+	/*position: relative;*/
+	/*border-radius: 30px;*/
 }
 
 .timer {
@@ -140,6 +142,12 @@
 .progress {
 	margin-bottom: 10px;
 	height: 8px !important;
+	background-color: rgba(255, 255, 255, 0) !important;
+}
+
+.progress-bar {
+	background-color: rgba(255, 255, 255, 1) !important;
+	opacity: 1;
 }
 
 .timer-empty {
@@ -158,4 +166,5 @@
 	background: none;
 	color: azure;
 	font-size: xx-large;
+	border: none;
 }

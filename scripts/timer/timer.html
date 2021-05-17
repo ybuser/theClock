@@ -30,7 +30,7 @@
 					><i class="bi bi-hourglass-split image-selected"></i
 				></a>
 			</div>
-			<div class="timer-main">
+			<div class="timer-main" style="display: none">
 				<p class="timer-main-title">Title 1</p>
 				<p class="timer-main-timer">00:00</p>
 				<p class="timer-main-bar"></p>
@@ -38,9 +38,16 @@
 				<p class="timer-main-stop"></p>
 				<p class="timer-main-reset"></p>
 			</div>
-			<div class="timer-list overflow-auto">
-				<div class="timer-create">
-					<button><i class="bi bi-plus"></i>Create New Timer</button>
+			<div class="timer-list-wrapper">
+				<div
+					class="timer-list overflow-auto"
+					style="margin-left: 100px"
+				>
+					<div class="timer-create">
+						<button>
+							<i class="bi bi-plus"></i>Create New Timer
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
