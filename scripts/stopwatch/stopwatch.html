@@ -1,35 +1,88 @@
 <!DOCTYPE html>
-<!--
-	버튼 이미지는 bootstrap cdn 이미지를 활용
--->
-<html>
-	<head>
-		<link rel="stylesheet" href="stopwatch-style.css" />
-		<meta charset="UTF-8" />
-		<title>StopWatch</title>
-		<link
-			href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-			rel="stylesheet"
-			integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-			crossorigin="anonymous"
-		/>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script type="text/javascript" src="stopwatch.js"></script>
-	</head>
-	<body>
-		<div id="box" class="box">
-			<div id="timerBox" class="timerBox">
-				<div id="time" class="time">00:00:00</div>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Stopwatch</title>
+
+	<!-- External CSS -->
+	<link rel="stylesheet" href = "stopwatch-style.css" />
+</head>
+<body>
+	<div class="container">
+		<div class="watch">
+			<div class="outer-circle">
+				<div class="inner-circle">
+					<span class="text minute">01 :</span>
+					<span class="text sec">&nbsp;47 .</span>
+					<span class="text msec">&nbsp;97</span>
+				</div>
 			</div>
-			<div class="btnBox">
-				<i id="startbtn" class="fa fa-play" aria-hidden="true"></i>
-				<i id="pausebtn" class="fa fa-pause" aria-hidden="true"></i>
-				<i id="stopbtn" class="fa fa-stop" aria-hidden="true"></i>
+			<div class = "button-wrapper">
+				<button class="button reset hidden">Reset</button>
+				<button class="button play">Play</button>
+				<button class="button lap hidden">Lap</button>
 			</div>
 		</div>
-		<!--
-		<button class="go-back">Go back</button>
-		<script src="stopwatch.js"></script>
-		-->
-	</body>
+		<ul class="laps">
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<li class="lap-item">
+				<span class="number">#1</span>
+				<span class="time-stamp"> 01 : 43 : 07</span>
+			</li>
+			<button class="lap-clear-button">Clear All</button>
+		</ul>
+	</div>
+
+	<script>
+		const playButton = document.getElementsByClassName("play")[0];
+		const lapButton = document.getElementsByClassName("lap")[0];
+		const resetButton = document.getElementsByClassName("reset")[0];
+
+		const toggleButton = () => {
+			lapButton.classList.remove("hidden")
+			resetButton.classList.remove("hidden")
+		}
+
+		const play = () => {
+			if (isPlay) {
+				playButton.innerHTML = 'Pause';
+				isPlay = false;
+			} else{
+				playButton.innerHTML = 'Play';
+				isPlay = true;
+			}
+			toggleButton();
+		}
+
+		playButton.addEventListener("click", play);
+	</script>
+</body>
 </html>
