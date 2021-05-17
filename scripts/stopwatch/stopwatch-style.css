@@ -1,4 +1,4 @@
-*{
+* {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -24,6 +24,31 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.animation-bg {
+	background: linear-gradient(
+		-45deg,
+		#ee7752,
+		orange,
+		#e73c73,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 400% 400%;
+	animation: gradient 7s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
 .inner-circle {
@@ -119,10 +144,9 @@ body {
 	width: 130px;
 	padding: 10px 0;
 	border-radius: 50px;
-	background-color: rgba(255,255,255,0.7);
+	background-color: rgba(255, 255, 255, 0.7);
 	border: 1px solid white;
 }
-
 
 .hidden {
 	visibility: hidden;

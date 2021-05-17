@@ -1,132 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Stopwatch</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Stopwatch</title>
 
-	<!-- External CSS -->
-	<link rel="stylesheet" href = "stopwatch-style.css" />
-</head>
-<body>
-	<div class="container">
-		<div class="watch">
-			<div class="outer-circle">
-				<div class="inner-circle">
-					<span class="text minute">0 :</span>
-					<span class="text sec">&nbsp;0 :</span>
-					<span class="text msec">&nbsp;0</span>
+		<!-- External CSS -->
+		<link rel="stylesheet" href="stopwatch-style.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="watch">
+				<div class="outer-circle">
+					<div class="inner-circle">
+						<span class="text minute">0 :</span>
+						<span class="text sec">&nbsp;0 :</span>
+						<span class="text msec">&nbsp;0</span>
+					</div>
+				</div>
+				<div class="button-wrapper">
+					<button class="button reset hidden">Reset</button>
+					<button class="button play">Play</button>
+					<button class="button lap hidden">Lap</button>
 				</div>
 			</div>
-			<div class = "button-wrapper">
-				<button class="button reset hidden">Reset</button>
-				<button class="button play">Play</button>
-				<button class="button lap hidden">Lap</button>
-			</div>
+			<ul class="laps">
+				<button class="lap-clear-button hidden">Clear All</button>
+			</ul>
 		</div>
-		<ul class="laps">
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<li class="lap-item">
-				<span class="number">#1</span>
-				<span class="time-stamp"> 01 : 43 : 07</span>
-			</li>
-			<button class="lap-clear-button">Clear All</button>
-		</ul>
-	</div>
 
-	<script>
-		const playButton = document.getElementsByClassName("play")[0];
-		const lapButton = document.getElementsByClassName("lap")[0];
-		const resetButton = document.getElementsByClassName("reset")[0];
-		const minute = document.getElementsByClassName("minute")[0];
-		const second = document.getElementsByClassName("sec")[0];
-		const centiSecond = document.getElementsByClassName("msec")[0];
+		<script src="stopwatch.js"></script>
 
-		let isPlay = false
-		let secCounter = 0;
-		let min;
-		let sec;
-		let centiSec;
-		let centiCounter = 0;
-		let minCounter = 0;
-		let isReset = false;
-
-		const toggleButton = () => {
-			lapButton.classList.remove("hidden");
-			resetButton.classList.remove("hidden");
-		}
-
-		const play = () => {
-
-			if (!isPlay && !isReset) {
-				playButton.innerHTML = 'Pause';
-				min = setInterval(() => {
-					minute.innerHTML = `${++minCounter} :`;
-				}, 60*1000);
-				sec = setInterval(() => {
-					if(secCounter === 60){
-						secCounter = 0;
-					}
-					second.innerHTML = `&nbsp;${++secCounter} :`;
-				}, 1000);
-				centiSec = setInterval(() => {
-					if (centiCounter === 100) {
-						centiCounter = 0;
-					}
-					centiSecond.innerHTML = `&nbsp;${centiCounter++}`;
-				}, 10);
-				isPlay = true;
-				isReset = true;
-			} else{
-				playButton.innerHTML = 'Play';
-				clearInterval(min);
-				clearInterval(sec);
-				clearInterval(centiSec);
-				isPlay = false;
-				isReset = false;
-			}
-			toggleButton();
-		}
-
-		const reset = () => {
-			isReset = true;
-			play();
-			lapButton.classList.add("hidden");
-			resetButton.classList.add("hidden");
-			second.innerHTML = '&nbsp;0 :';
-			centiSecond.innerHTML = '&nbsp;0';
-			minute.innerHTML = '0 :';
-		}
-
-		playButton.addEventListener("click", play);
-		resetButton.addEventListener("click", reset);
-</script>
-</body>
+	</body>
 </html>
