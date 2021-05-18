@@ -347,6 +347,7 @@ function setDiv(div, id, item) {
 		class="btn btn-primary timer-settingOpen"
 		data-bs-toggle="modal"
 		data-bs-target="#modal_${id}"
+		style="background-color: #7d7d7d; color: white; border-color: #7d7d7d;"
 	>
 		Settings
 	</button>

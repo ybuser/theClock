@@ -1,79 +1,85 @@
+@font-face {
+    font-family: "BAHNSCHRIFT"; /*글꼴*/
+    src: url("./font/BAHNSCHRIFT\ 3.TTF") format("truetype");
+}
+
 .timer-body {
-	display: flex;
-	/*background-color: #2d3436;*/
-	min-height: 100vh;
-	max-height: 100vh;
+    display: flex;
+    /*background-color: #2d3436;*/
+    min-height: 100vh;
+    max-height: 100vh;
+    font-family: "BAHNSCHRIFT", sans-serif;
 }
 
 /** side bar **/
 
 .timer-sidebar {
-	height: 100%;
-	width: 100px;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(255, 255, 255, 0.5);
-	overflow-x: hidden;
-	padding-top: 20px;
-	/*border-right: solid white;*/
+    height: 100%;
+    width: 100px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    overflow-x: hidden;
+    padding-top: 20px;
+    /*border-right: solid white;*/
 }
 
 .menu-button {
-	flex-direction: column;
-	display: inline-flex;
-	margin: 25px 25px;
+    flex-direction: column;
+    display: inline-flex;
+    margin: 25px 25px;
 }
 
 .image-selected {
-	width: 50px;
-	height: 50px;
-	font-size: 50px;
-	text-align: center;
-	vertical-align: middle;
-	/*color: #ffb142;*/
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    text-align: center;
+    vertical-align: middle;
+    /*color: #ffb142;*/
 }
 
 .image-selected:hover {
-	/*color: #cc8e35;*/
+    /*color: #cc8e35;*/
 }
 
 .image-size {
-	width: 50px;
-	height: 50px;
-	font-size: 50px;
-	text-align: center;
-	vertical-align: middle;
-	color: black;
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    text-align: center;
+    vertical-align: middle;
+    color: black;
 }
 
 .image-size:hover {
-	color: #36373b;
+    color: #36373b;
 }
 
 /** timer-middle **/
 .timer-main {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	flex-grow: 1.5;
-	flex-shrink: 0;
-	flex-basis: 0;
-	padding-left: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-grow: 1.5;
+    flex-shrink: 0;
+    flex-basis: 0;
+    padding-left: 100px;
 
-	color: #dcdef5;
+    color: #dcdef5;
 }
 
 .timer-main-title {
-	color: black;
-	font-size: 100px;
+    color: black;
+    font-size: 100px;
 }
 
 .timer-main-timer {
-	color: black;
-	font-size: 100px;
+    color: black;
+    font-size: 100px;
 }
 
 .timer-main-start {
@@ -89,82 +95,115 @@
 }
 
 /** timer-list **/
-
+body {
+    background: linear-gradient(to right, #529bff, #b193f7);
+}
 .timer-list-wrapper {
-	flex-grow: 1;
-	flex-shrink: 0;
-	flex-basis: 0;
-	max-height: 100vh;
-	background: linear-gradient(to right, #529bff, #b193f7);
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 0;
+    max-height: 100vh;
 }
 .timer-list {
-	/*position: relative;*/
-	/*border-radius: 30px;*/
+    /*position: relative;*/
+    /*border-radius: 30px;*/
 }
 
 .timer {
-	height: 180px;
-	width: 100%;
-	color: white;
-	padding: 0rem 1rem;
+    height: 180px;
+    width: 100%;
+    color: white;
+    padding: 0rem 1rem;
 }
 
 .timer-focused {
-	background-color: #17182c;
+    background-color: #17182c;
 }
 
 .timer-header {
-	display: flex;
-	flex-shrink: 0;
-	align-items: center;
-	justify-content: space-between;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .timer-Close {
-	color: white;
-	fill: white;
+    color: white;
+    fill: white;
 }
 
 .timer-title {
-	border: none;
-	background: none;
-	color: white;
+    border: none;
+    background: none;
+    color: white;
 }
 
 .timer-title:focus {
-	outline: none;
+    outline: none;
 }
 
 .timer-title.get-input {
-	border-bottom: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .progress {
-	margin-bottom: 10px;
-	height: 8px !important;
-	background-color: rgba(255, 255, 255, 0) !important;
+    margin-bottom: 10px;
+    height: 8px !important;
+    background-color: rgba(255, 255, 255, 0) !important;
 }
 
 .progress-bar {
-	background-color: rgba(255, 255, 255, 1) !important;
-	opacity: 1;
+    background-color: rgba(255, 255, 255, 1) !important;
+    opacity: 1;
 }
 
+.btn-success {
+    background-color: #353535 !important;
+    color: white !important;
+    border-color: #353535 !important;
+}
+
+.btn-success:hover {
+    background-color: #252525 !important;
+    border-color: #252525 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #494949 !important;
+    border-color: #494949 !important;
+}
+
+.btn-secondary {
+    color: white !important;
+    background-color: #595959 !important;
+    border-color: #595959 !important;
+}
+
+.btn-primary {
+    color: white !important;
+    background-color: #7d7d7d !important;
+    border-color: #7d7d7d !important;
+}
+
+.btn-primary:hover {
+    background-color: #6d6d6d !important;
+    border-color: #6d6d6d !important;
+}
 .timer-empty {
-	border: 2px dashed #ffda79;
-	background-color: none;
+    border: 2px dashed #ffda79;
+    background-color: none;
 }
 
 .timer-create {
-	width: 100%;
-	height: 200px;
+    width: 100%;
+    height: 200px;
 }
 
 .timer-create button {
-	width: 100%;
-	height: 200px;
-	background: none;
-	color: azure;
-	font-size: xx-large;
-	border: none;
+    width: 100%;
+    height: 200px;
+    background: none;
+    color: azure;
+    font-size: xx-large;
+    border: none;
 }
