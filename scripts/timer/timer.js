@@ -922,6 +922,37 @@ function firstDivFocused() {
 	firstDiv.classList.add("timer-focused");
 }
 
+function loadBackground() {
+	let background = localStorage.getItem("background");
+	if (!background) {
+		localStorage.setItem("background", "typeOne");
+		background = "typeOne";
+	}
+
+	const globalSetting = document.getElementById("global-settingModal"),
+		globalBackground = globalSetting.querySelector("select");
+
+	console.dir(globalBackground.children);
+	for (let i = 0; i < globalBackground.children.length; i++) {
+		ele = globalBackground.children[i];
+		if (ele.value === background) {
+			ele.selected = true;
+		}
+	}
+
+	globalBackground.addEventListener("change", (ele) => {
+		console.log(ele);
+		console.log("timer-" + ele.target.value);
+		document
+			.querySelector("body")
+			.classList.remove("timer-" + localStorage.getItem("background"));
+		document
+			.querySelector("body")
+			.classList.add("timer-" + ele.target.value);
+		localStorage.setItem("background", ele.target.value);
+	});
+}
+
 // First Function
 function init() {
 	// load from local storage
@@ -938,6 +969,8 @@ function init() {
 		.querySelector(".timer-create")
 		.querySelector("button");
 	createTimerButton.addEventListener("click", createCurDiv);
+
+	loadBackground();
 }
 
 init();
