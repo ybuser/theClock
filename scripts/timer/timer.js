@@ -339,19 +339,18 @@ function setDiv(div, id, item) {
 	<div class="progress">
 		<div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 	</div>
-	<button type="button" class="btn btn-success timer-start">Start</button>
+	<button type="button" class="btn btn-info timer-start">Start</button>
 	<button type="button" class="btn btn-danger timer-stop">Stop</button>
-	<button type="button" class="btn btn-secondary timer-reset">Reset</button>
+	<button type="button" class="btn btn-warning timer-reset">Reset</button>
 	<button
 		type="button"
-		class="btn btn-primary timer-settingOpen"
+		class="btn btn-link timer-settingOpen"
 		data-bs-toggle="modal"
 		data-bs-target="#modal_${id}"
-		style="background-color: #7d7d7d; color: white; border-color: #7d7d7d;"
 	>
 		Settings
 	</button>
-	<button type="button" class="btn btn-primary timer-stopalarm">
+	<button type="button" class="btn btn-link timer-stopalarm">
 		Stop Alarm
 	</button>
 
@@ -366,7 +365,7 @@ function setDiv(div, id, item) {
 	>
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form class="row g-3 needs-validation" novalidate>
+				<form class="g-3 needs-validation" novalidate>
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">
 							Clock Settings
@@ -401,7 +400,7 @@ function setDiv(div, id, item) {
 							<label for="time-setting-input" class="col-form-label"
 								>Time:</label
 							>
-							<div class="container time-setting-input">
+							<div class="time-setting-input ms-2 me-2">
 								<div class="row">
 									<div class="col">
 										<input
@@ -410,7 +409,7 @@ function setDiv(div, id, item) {
 											value="0"
 										/>
 									</div>
-									<div class="col"><p>:</p></div>
+									<div class="col">:</div>
 									<div class="col">
 										<input
 											type="number"
@@ -419,7 +418,7 @@ function setDiv(div, id, item) {
 											value="0"
 										/>
 									</div>
-									<div class="col"><p>:</p></div>
+									<div class="col">:</div>
 									<div class="col">
 										<input
 											type="number"
@@ -484,6 +483,12 @@ function setDiv(div, id, item) {
 		</div>
 	</div>
 `;
+}
+
+// Make new timerdiv with button
+function createCurDivWithButton() {
+	createCurDiv();
+	window.scrollBy(0, 180);
 }
 
 // Make new timerdiv
@@ -645,21 +650,23 @@ function createDivEvents(div, item) {
 		div.style.position = "absolute";
 		list.insertBefore(empty_div, div.nextSibling);
 		pos3 = e.clientX;
-		pos4 = e.clientY + list.scrollTop;
+		pos4 = e.clientY;
 		console.log(pos3, pos4);
 		document.addEventListener("mouseup", closeDragElement);
 		document.addEventListener("mousemove", elementDrag);
-		document.addEventListener("scroll", (ele) => {
+		const dragScrollevent = function (ele) {
 			console.log(ele);
-		});
+		};
+		document.addEventListener("scroll", dragScrollevent);
 		div.style.top = div.offsetTop - list.scrollTop + "px";
+		div.style.width = div.offsetWidth - 100 + "px";
 		function elementDrag(ele) {
 			ele = ele || window.event;
 			ele.preventDefault();
 			pos1 = pos3 - ele.clientX;
-			pos2 = pos4 - (ele.clientY + list.scrollTop);
+			pos2 = pos4 - ele.clientY;
 			pos3 = ele.clientX;
-			pos4 = ele.clientY + list.scrollTop;
+			pos4 = ele.clientY;
 			div.style.top = div.offsetTop - pos2 + "px";
 			div.style.left = div.offsetLeft - pos1 + "px";
 
@@ -671,38 +678,32 @@ function createDivEvents(div, item) {
 					empty_div.nextSibling &&
 					!empty_div.nextSibling.classList.contains("timer-create")
 				) {
-					const scrolled = list.scrollTop;
-					empty_div.nextSibling.after(empty_div);
-					//empty_div.before(div);
+					empty_div.before(empty_div.nextSibling);
 					[timerList[index], timerList[index + 1]] = [
 						timerList[index + 1],
 						timerList[index],
 					];
 					index++;
 					saveList();
-					list.scrollTop = scrolled;
-					console.log(empty_div.offsetTop, list.scrollTop);
 				}
 			} else if (
 				div.offsetTop - pos2 - (empty_div.offsetTop - list.scrollTop) <
 				-100
 			) {
 				if (index !== 0) {
-					const scrolled = list.scrollTop;
 					if (empty_div.previousSibling === div) {
-						empty_div.previousSibling.previousSibling.before(
-							empty_div
+						empty_div.after(
+							empty_div.previousSibling.previousSibling
 						);
-					} else empty_div.previousSibling.before(empty_div);
+					} else {
+						empty_div.after(empty_div.previousSibling);
+					}
 					[timerList[index], timerList[index - 1]] = [
 						timerList[index - 1],
 						timerList[index],
 					];
 					index--;
 					saveList();
-					//empty_div.before(div);
-					list.scrollTop = scrolled;
-					console.log(empty_div.offsetTop, list.scrollTop);
 				}
 			}
 		}
@@ -713,8 +714,10 @@ function createDivEvents(div, item) {
 			div.style.position = "";
 			div.style.top = "";
 			div.style.left = "";
+			div.style.width = "";
 			empty_div.before(div);
 			empty_div.remove();
+			document.removeEventListener("scroll", dragScrollevent);
 		}
 	});
 }
@@ -893,6 +896,7 @@ function keyboardSettings(event) {
 			div.querySelector(".timer-reset").click();
 			break;
 		case 32: // Space
+			event.preventDefault();
 			if (timerDict[div.id].running)
 				div.querySelector(".timer-stop").click();
 			else div.querySelector(".timer-start").click();
@@ -932,13 +936,14 @@ function loadBackground() {
 	const globalSetting = document.getElementById("global-settingModal"),
 		globalBackground = globalSetting.querySelector("select");
 
-	console.dir(globalBackground.children);
 	for (let i = 0; i < globalBackground.children.length; i++) {
 		ele = globalBackground.children[i];
 		if (ele.value === background) {
 			ele.selected = true;
 		}
 	}
+
+	document.querySelector("body").classList.add("timer-" + background);
 
 	globalBackground.addEventListener("change", (ele) => {
 		console.log(ele);
@@ -968,8 +973,9 @@ function init() {
 	const createTimerButton = document
 		.querySelector(".timer-create")
 		.querySelector("button");
-	createTimerButton.addEventListener("click", createCurDiv);
+	createTimerButton.addEventListener("click", createCurDivWithButton);
 
+	// load background setting, and make background
 	loadBackground();
 }
 

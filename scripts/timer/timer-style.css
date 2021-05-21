@@ -64,7 +64,7 @@
 /** timer-list **/
 
 .timer-typeOne {
-	background: linear-gradient(to right, #529bff, #b193f7);
+	background: linear-gradient(to right, #43cea2, #185a9d);
 }
 
 .timer-typeTwo {
@@ -80,35 +80,22 @@
 }
 
 .timer-typeFive {
-	background: linear-gradient(to right, #5614b0, #dbd65c);
-}
-.timer-typeSix {
 	background: linear-gradient(to right, #2c3e50, #fd746c);
 }
+.timer-typeSix {
+	background: linear-gradient(to right, #529bff, #b193f7);
+}
 .timer-typeSeven {
-	background: linear-gradient(to right, #43cea2, #185a9d);
+	background: linear-gradient(to right, #4568dc, #b06ab3);
 }
 .timer-typeEight {
-	background: linear-gradient(to right, #4568dc, #b06ab3); /* biseut*/
+	background: linear-gradient(to right, #5614b0, #dbd65c);
 }
 .timer-typeNine {
-	background: linear-gradient(to right, #fc466b, #3f5efb); /* biseut*/
+	background: linear-gradient(to right, #cc95c0, #dbd4b4, #7aa1d2);
 }
 .timer-typeTen {
-	background: linear-gradient(
-		to right,
-		#cc95c0,
-		#dbd4b4,
-		#7aa1d2
-	); /* biseut*/
-}
-.timer-typeEleven {
-	background: linear-gradient(
-		to right,
-		#77a1d3,
-		#79cbca,
-		#e684ae
-	); /* biseut*/
+	background: linear-gradient(to right, #77a1d3, #79cbca, #e684ae);
 }
 
 .timer-list-wrapper {
@@ -116,11 +103,12 @@
 	flex-shrink: 0;
 	flex-basis: 0;
 	max-height: 100vh;
+	padding-left: 100px;
 }
 .timer-list {
 	/*position: relative;*/
 	/*border-radius: 30px;*/
-	padding-left: 100px;
+	/*padding-left: 100px;*/
 }
 
 .timer {
@@ -131,7 +119,7 @@
 }
 
 .timer-focused {
-	background-color: #17182c;
+	background-color: #1f2044;
 }
 
 .timer-header {
@@ -171,35 +159,36 @@
 	opacity: 1;
 }
 
-.btn-success {
+.btn-info {
 	background-color: #353535 !important;
 	color: white !important;
 	border-color: #353535 !important;
 }
 
-.btn-success:hover {
+.btn-info:hover {
 	background-color: #252525 !important;
 	border-color: #252525 !important;
 }
 
-.btn-secondary:hover {
+.btn-warning:hover {
 	background-color: #494949 !important;
 	border-color: #494949 !important;
 }
 
-.btn-secondary {
+.btn-warning {
 	color: white !important;
 	background-color: #595959 !important;
 	border-color: #595959 !important;
 }
 
-.btn-primary {
+.btn-link {
 	color: white !important;
 	background-color: #7d7d7d !important;
 	border-color: #7d7d7d !important;
+	text-decoration: none !important;
 }
 
-.btn-primary:hover {
+.btn-link:hover {
 	background-color: #6d6d6d !important;
 	border-color: #6d6d6d !important;
 }
@@ -220,4 +209,8 @@
 	color: azure;
 	font-size: xx-large;
 	border: none;
+}
+
+.modal {
+	color: black;
 }

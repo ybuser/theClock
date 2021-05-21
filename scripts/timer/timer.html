@@ -14,7 +14,7 @@
 			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
 		/>
 	</head>
-	<body class="timer-typeThree">
+	<body>
 		<div class="timer-body">
 			<div class="timer-sidebar d-flex flex-column">
 				<a class="menu-button me-auto"
@@ -41,7 +41,6 @@
 			<div
 				class="modal fade"
 				id="global-settingModal"
-				data-bs-backdrop="static"
 				data-bs-keyboard="false"
 				tabindex="-1"
 				aria-labelledby="settingTitle"
@@ -82,9 +81,6 @@
 										<option value="typeEight">type8</option>
 										<option value="typeNine">type9</option>
 										<option value="typeTen">type10</option>
-										<option value="typeEleven">
-											type11
-										</option>
 									</select>
 								</div>
 							</form>
@@ -97,7 +93,11 @@
 							>
 								Close
 							</button>
-							<button type="button" class="btn btn-primary">
+							<button
+								type="button"
+								class="btn btn-primary"
+								data-bs-dismiss="modal"
+							>
 								Save changes
 							</button>
 						</div>
