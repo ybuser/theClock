@@ -739,6 +739,15 @@ function barUpdate(bar, item) {
 	}
 }
 
+function getOverTime(time) {
+	time = Math.floor(time / 1000);
+	const hour = Math.floor(time / 3600);
+	time %= 3600;
+	const minute = Math.floor(time / 60);
+	const second = time % 60;
+	return { hour, minute, second };
+}
+
 // Make timerdiv
 function createDiv(id, item) {
 	// set div
@@ -769,8 +778,8 @@ function createDiv(id, item) {
 		? item.finishTime - Date.now()
 		: item.finishTime;
 	if (totalTime < 0) {
-		overTimer.push(id);
-		item.running = true;
+		const overedtime = getOverTime(-totalTime);
+		overTimer.push({ id, overedtime });
 	}
 	setClockTotalTime(div.querySelector(".timer-time"), totalTime);
 
@@ -851,7 +860,15 @@ function loadStorage() {
 				.querySelector(".overTime-list");
 		for (let i = 0; i < overTimer.length; i++) {
 			const listElement = document.createElement("li");
-			listElement.innerText = timerDict[overTimer[i]].title;
+			let txt = "";
+			if (overTimer[i].overedtime.hour !== 0) {
+				txt = `${overTimer[i].overedtime.hour}h`;
+			}
+			listElement.innerText = `${
+				timerDict[overTimer[i].id].title
+			} : ${txt} ${overTimer[i].overedtime.minute}m ${
+				overTimer[i].overedtime.second
+			}s ago`;
 			overTimeList.append(listElement);
 		}
 		window.addEventListener("load", () => {
