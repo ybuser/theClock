@@ -35,19 +35,6 @@
 	border: none;
 }
 
-.image-selected {
-	width: 50px;
-	height: 50px;
-	font-size: 50px;
-	text-align: center;
-	vertical-align: middle;
-	/*color: #ffb142;*/
-}
-
-.image-selected:hover {
-	/*color: #cc8e35;*/
-}
-
 .image-size {
 	width: 50px;
 	height: 50px;
@@ -59,6 +46,14 @@
 
 .image-size:hover {
 	color: #36373b;
+}
+
+.image-selected {
+	color: #1a66da;
+}
+
+.image-selected:hover {
+	color: #17529e;
 }
 
 /** timer-list **/
