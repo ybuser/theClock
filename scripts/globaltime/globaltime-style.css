@@ -38,7 +38,9 @@ body {
 	height: 4%;
 	z-index: 10;
 }
-.minutes-container, .hours-container, .seconds-container {
+.minutes-container,
+.hours-container,
+.seconds-container {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -101,7 +103,8 @@ body {
 	background: #fff;
 	border-radius: 0.25em;
 	color: #000;
-	font-family: MyriadPro-Regular, 'Myriad Pro Regular', MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif;
+	font-family: MyriadPro-Regular, "Myriad Pro Regular", MyriadPro,
+		"Myriad Pro", Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -114,10 +117,12 @@ body {
 @keyframes rotate {
 	100% {
 		transform: rotateZ(360deg);
-   }
+	}
 }
 .clock.station {
-	background: #fff url(https://cssanimation.rocks/assets/images/posts/clocks/station_clock.svg) no-repeat center;
+	background: #fff
+		url(https://cssanimation.rocks/assets/images/posts/clocks/station_clock.svg)
+		no-repeat center;
 	background-size: 95%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2) inset;
 }
@@ -132,7 +137,8 @@ body {
 	width: 500%;
 }
 .clock.ios7 {
-	background: #fff url(/assets/images/posts/clocks/ios_clock.svg) no-repeat center;
+	background: #fff url(/assets/images/posts/clocks/ios_clock.svg) no-repeat
+		center;
 	background-size: 88%;
 }
 .clock.ios7:before {
@@ -176,7 +182,8 @@ body {
 	transform-origin: 50% 100%;
 }
 .clock.simple {
-	background: #fff url(/assets/images/posts/clocks/ios_clock.svg) no-repeat center;
+	background: #fff url(/assets/images/posts/clocks/ios_clock.svg) no-repeat
+		center;
 	background-size: 88%;
 }
 .clock.simple:after {
