@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Alarm</title>
+
+		<link rel="stylesheet" href="alarm-style.css" />
+	</head>
+	<body>
+		<!-- (A) CURRENT TIME -->
+		<div id="ctime">
+			<h1 class="header">THE CURRENT TIME</h1>
+			<div class="square">
+				<div class="digits" id="chr">00</div>
+				<div class="text">HR</div>
+			</div>
+			<div class="square">
+				<div class="digits" id="cmin">00</div>
+				<div class="text">MIN</div>
+			</div>
+			<div class="square">
+				<div class="digits" id="csec">00</div>
+				<div class="text">SEC</div>
+			</div>
+		</div>
+
+		<!-- (B) SET ALARM -->
+		<div id="tpick">
+			<h1 class="header">SET ALARM</h1>
+			<div id="tpick-h"></div>
+			<div id="tpick-m"></div>
+			<div id="tpick-s"></div>
+			<div>
+				<input type="button" value="Set" id="tset" />
+				<input type="button" value="Reset" id="treset" disabled />
+			</div>
+		</div>
+
+		<!-- (C) ALARM SOUND -->
+		<audio id="alarm-sound" loop>
+			<source src="./sound/alarm.mp3" type="audio/mp3" />
+		</audio>
+
+		<script src="alarm.js"></script>
+	</body>
+</html>
