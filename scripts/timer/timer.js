@@ -645,6 +645,7 @@ function createDivEvents(div, item) {
 
 		let pos1 = 0,
 			pos2 = 0,
+			pos2_f = 0,
 			pos3 = e.clientX,
 			pos4 = e.clientY,
 			posscroll = window.scrollY,
@@ -659,20 +660,35 @@ function createDivEvents(div, item) {
 
 		document.addEventListener("mouseup", closeDragElement);
 		document.addEventListener("mousemove", elementDrag);
+		document.addEventListener("scroll", moveDragging);
+
+		function moveDragging(ele) {
+			pos2 = pos2_f + posscroll - window.scrollY;
+			pos2_f = pos2 - Math.floor(pos2);
+			console.log(posscroll, pos2, div.offsetTop);
+
+			posscroll = window.scrollY;
+			div.style.top = div.offsetTop - Math.floor(pos2) + "px";
+			const divPos =
+				div.offsetTop - Math.floor(pos2) - empty_div.offsetTop;
+			moveAroundEmptydiv(divPos);
+		}
 
 		function elementDrag(ele) {
 			ele = ele || window.event;
 			ele.preventDefault();
 			pos1 = pos3 - ele.clientX;
-			pos2 = pos4 - ele.clientY + posscroll - window.scrollY;
+			pos2 = pos4 - ele.clientY;
 			pos3 = ele.clientX;
 			pos4 = ele.clientY;
-			posscroll = window.scrollY;
 			div.style.top = div.offsetTop - pos2 + "px";
 			div.style.left = div.offsetLeft - pos1 + "px";
 
-			const divPos = div.offsetTop - pos2 - empty_div.offsetTop,
-				timerDictLength = Object.keys(timerList).length;
+			const divPos = div.offsetTop - pos2 - empty_div.offsetTop;
+			moveAroundEmptydiv(divPos);
+		}
+		function moveAroundEmptydiv(divPos) {
+			const timerDictLength = Object.keys(timerList).length;
 			// move to top
 			if (divPos > 180 && index !== timerDictLength - 1) {
 				empty_div.before(empty_div.nextSibling);
@@ -704,6 +720,7 @@ function createDivEvents(div, item) {
 		function closeDragElement() {
 			document.removeEventListener("mouseup", closeDragElement);
 			document.removeEventListener("mousemove", elementDrag);
+			document.removeEventListener("scroll", moveDragging);
 			div.style.position = "";
 			div.style.top = "";
 			div.style.left = "";
@@ -1011,3 +1028,7 @@ function init() {
 }
 
 init();
+
+document.addEventListener("mousemove", (e) => {
+	console.log(e.pageX, e.pageY);
+});
