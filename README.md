@@ -84,7 +84,7 @@ Settings 버튼을 통해 제목, 시간과 알람음, 알람음 크기를 조�
 </br>
 
 <!-- Links to resources -->
-## Links to Rescources
+## Links to Resources
 </br>
 
 <!-- Installation -->
@@ -144,7 +144,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on the process for su
 
 <!-- License -->
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 <!-- Code of Conduct -->
 ## Code of Conduct
