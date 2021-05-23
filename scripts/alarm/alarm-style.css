@@ -85,3 +85,70 @@ body {
 	background: #aaa;
 	color: #888;
 }
+
+
+/* Side Menu */
+.sidebar {
+	height: 100%;
+	width: 100px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.5);
+	overflow-x: hidden;
+	padding-top: 20px;
+	align-items: center;
+	text-align: center;
+}
+
+.menu-button {
+	flex-direction: column;
+	display: inline-flex;
+	margin: 25px 25px;
+	background: none;
+	border: none;
+}
+
+.image-size {
+	width: 50px;
+	height: 50px;
+	font-size: 50px;
+	text-align: center;
+	vertical-align: middle;
+	color: black !important;
+}
+
+.image-size:hover {
+	color: #36373b !important;
+}
+
+.image-selected {
+	color: #1a66da !important;
+}
+
+.image-selected:hover {
+	color: #17529e !important;
+}
+
+.button-wrapper {
+	width: 250px;
+	margin-top: 30px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.button {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: 2px solid white;
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+.button:hover {
+	background-color: white;
+	color: black;
+}
