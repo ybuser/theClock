@@ -1,3 +1,4 @@
+/*
 const timerButton = document.querySelector(".go-to-timer");
 timerButton.addEventListener("click", () => {
 	location.href = "./scripts/timer/timer.html";
@@ -22,4 +23,4 @@ const globaltimeButton = document.querySelector(".go-to-globaltime");
 globaltimeButton.addEventListener("click", () => {
 	location.href = "./scripts/globaltime/globaltime.html";
 });
-
+*/
