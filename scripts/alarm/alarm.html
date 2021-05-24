@@ -19,34 +19,14 @@
 		<link rel="stylesheet" href="alarm-style.css" />
 	</head>
 	<body>
-		<div>
-			<ul class="nav nav-pills justify-content-center">
-				<li class="nav-item">
-					<a class="nav-link" href="../../index.html" >Menu</a>
-				</li>
-				<li class="nav-item">
-				<a class="nav-link" href="../timer/timer.html">Timer</a>
-				</li>
-				<li class="nav-item">
-				<a class="nav-link" href="../stopwatch/stopwatch.html">Stopwatch</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="../backgroundclock/backgroundclock.html">Background Clock</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="#" aria-current="page">Alarm</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="../globaltime/globaltime.html">Global Clock</a>
-				</li>
-			</ul>
-		</div>
 		<!-- Side Menu-->
 		<div class="sidebar d-flex flex-column">
-			<a class="menu-button" href="../alarm/alarm.html"
+			<a class="menu-button" href="#" aria-current="page"
 				><i class="bi bi-alarm image-size image-selected"></i
 			></a>
-			<a class="menu-button me-auto" href="../backgroundclock/backgroundclock.html"
+			<a
+				class="menu-button me-auto"
+				href="../backgroundclock/backgroundclock.html"
 				><i class="bi bi-clock image-size"></i
 			></a>
 			<a class="menu-button" href="../stopwatch/stopwatch.html"
@@ -58,19 +38,21 @@
 		</div>
 
 		<!-- (A) CURRENT TIME -->
-		<div id="ctime">
-			<h1 class="header">THE CURRENT TIME</h1>
-			<div class="square">
-				<div class="digits" id="chr">00</div>
-				<div class="text">HR</div>
-			</div>
-			<div class="square">
-				<div class="digits" id="cmin">00</div>
-				<div class="text">MIN</div>
-			</div>
-			<div class="square">
-				<div class="digits" id="csec">00</div>
-				<div class="text">SEC</div>
+		<div style="display: flex">
+			<div id="ctime">
+				<h1 class="header">THE CURRENT TIME</h1>
+				<div class="square">
+					<div class="digits" id="chr">00</div>
+					<div class="text">HR</div>
+				</div>
+				<div class="square">
+					<div class="digits" id="cmin">00</div>
+					<div class="text">MIN</div>
+				</div>
+				<div class="square">
+					<div class="digits" id="csec">00</div>
+					<div class="text">SEC</div>
+				</div>
 			</div>
 		</div>
 

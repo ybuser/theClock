@@ -13,8 +13,16 @@ body {
 body {
 	background: black;
 	display: flex;
+	flex-direction: column;
+	/* justify-content: center;
+	align-items: center; */
+}
+
+.clockdiv {
+	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin: auto;
 }
 
 .clock {
@@ -68,7 +76,6 @@ body {
 		transform: translateY(-20vh);
 	}
 }
-
 
 /* Side Menu */
 .sidebar {

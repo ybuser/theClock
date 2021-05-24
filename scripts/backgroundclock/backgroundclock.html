@@ -25,7 +25,7 @@
 			<a class="menu-button" href="../alarm/alarm.html"
 				><i class="bi bi-alarm image-size"></i
 			></a>
-			<a class="menu-button me-auto" href="../backgroundclock/backgroundclock.html"
+			<a class="menu-button me-auto" href="#" aria-current="page"
 				><i class="bi bi-clock image-size image-selected"></i
 			></a>
 			<a class="menu-button" href="../stopwatch/stopwatch.html"
@@ -36,31 +36,48 @@
 			></a>
 		</div>
 
-		<div class="clock">
-			<div class="hours">
-				<div class="first">
-					<div class="number">0</div>
+		<div>
+			<ul class="nav nav-pills justify-content-center">
+				<li class="nav-item">
+					<a class="nav-link active" href="#" aria-current="page"
+						>Background Clock</a
+					>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="../globaltime/globaltime.html"
+						>Global Clock</a
+					>
+				</li>
+			</ul>
+		</div>
+
+		<div class="clockdiv">
+			<div class="clock">
+				<div class="hours">
+					<div class="first">
+						<div class="number">0</div>
+					</div>
+					<div class="second">
+						<div class="number">0</div>
+					</div>
 				</div>
-				<div class="second">
-					<div class="number">0</div>
+				<div class="tick">:</div>
+				<div class="minutes">
+					<div class="first">
+						<div class="number">0</div>
+					</div>
+					<div class="second">
+						<div class="number">0</div>
+					</div>
 				</div>
-			</div>
-			<div class="tick">:</div>
-			<div class="minutes">
-				<div class="first">
-					<div class="number">0</div>
-				</div>
-				<div class="second">
-					<div class="number">0</div>
-				</div>
-			</div>
-			<div class="tick">:</div>
-			<div class="seconds">
-				<div class="first">
-					<div class="number">0</div>
-				</div>
-				<div class="second infinite">
-					<div class="number">0</div>
+				<div class="tick">:</div>
+				<div class="seconds">
+					<div class="first">
+						<div class="number">0</div>
+					</div>
+					<div class="second infinite">
+						<div class="number">0</div>
+					</div>
 				</div>
 			</div>
 		</div>

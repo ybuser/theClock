@@ -584,7 +584,6 @@ function createDivEvents(div, item) {
 		if (!div.classList.contains("timer-focused")) div.focus();
 	});
 	timerTitle.addEventListener("dblclick", () => {
-		console.log(timerTitle.readOnly);
 		timerTitle.readOnly = "";
 		timerTitle.classList.add("get-input");
 	});
@@ -665,7 +664,6 @@ function createDivEvents(div, item) {
 		function moveDragging(ele) {
 			pos2 = pos2_f + posscroll - window.scrollY;
 			pos2_f = pos2 - Math.floor(pos2);
-			console.log(posscroll, pos2, div.offsetTop);
 
 			posscroll = window.scrollY;
 			div.style.top = div.offsetTop - Math.floor(pos2) + "px";
@@ -865,7 +863,6 @@ function loadStorage() {
 		createDiv(itemList[i], itemDict[itemList[i]]);
 	}
 
-	console.log(document.querySelector(".timer-list").childNodes.length);
 	if (document.querySelector(".timer-list").childNodes.length === 0) {
 		createCurDiv();
 	}
@@ -994,8 +991,6 @@ function loadBackground() {
 	document.querySelector("body").classList.add("timer-" + background);
 
 	globalBackground.addEventListener("change", (ele) => {
-		console.log(ele);
-		console.log("timer-" + ele.target.value);
 		document
 			.querySelector("body")
 			.classList.remove("timer-" + localStorage.getItem("background"));
@@ -1028,7 +1023,3 @@ function init() {
 }
 
 init();
-
-document.addEventListener("mousemove", (e) => {
-	console.log(e.pageX, e.pageY);
-});
