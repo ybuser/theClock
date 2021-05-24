@@ -27,21 +27,31 @@ const play = () => {
 	if (!isPlay && !isReset) {
 		playButton.innerHTML = "Pause";
 		bg.classList.add("animation-bg");
+		/*
 		min = setInterval(() => {
 			minute.innerHTML = `${++minCounter} :`;
 		}, 60 * 1000);
+
 		sec = setInterval(() => {
 			if (secCounter === 60) {
 				secCounter = 0;
 			}
 			second.innerHTML = `&nbsp;${++secCounter} :`;
 		}, 1000);
+		*/
+
 		centiSec = setInterval(() => {
 			if (centiCounter === 100) {
 				centiCounter = 0;
+				second.innerHTML = `&nbsp;${++secCounter} :`;
+				if (secCounter === 60) {
+					secCounter = 0;
+					minute.innerHTML = `${++minCounter} :`;
+				}
 			}
 			centiSecond.innerHTML = `&nbsp;${centiCounter++}`;
 		}, 10);
+
 		isPlay = true;
 		isReset = true;
 	} else {
