@@ -2,15 +2,15 @@
 
 the Clock Website
 
--A brief overview\
--Links to resources\
--Installation\
--API reference\
--Examples\
+-Website overview\
+-How to use\
+-Built with\
 -Releases (versions)\
--How to contribute\
+-Contributing\
 -License\
--Code of Conduct
+-Code of Conduct\
+-Authors\
+-Acknowledgments
 
 </br>
 
