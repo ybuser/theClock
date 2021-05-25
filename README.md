@@ -160,6 +160,6 @@ See also the list of [contributors](https://github.com/bagger3025/theClock/contr
 
 ## Acknowledgments
 
-성균관대학교 2021 1학기 오픈소스소프트웨어실습(조재민 교수님)
-SKKU 2021 Semester1 Open Source Software Practice
+성균관대학교 2021 1학기 오픈소스소프트웨어실습(조재민 교수님) </br>
+SKKU 2021 Semester1 Open Source Software Practice </br>
 SWE_2021_41 분반 Final Project
