@@ -47,24 +47,24 @@ the Clock Website
 
 ### -Stopwatch
 
-![alt text](screenshots/stopwatch1.png)
+![alt text](screenshots/13.png)
 
 기본 화면은 간단하게 PLAY 버튼만 표시하여 디자인을 간결하게 유지했습니다.
 
-![alt text](screenshots/stopwatch2.png)
+![alt text](screenshots/14.png)
 
 Play 버튼을 누를 시 스탑워치가 시작하며, Reset, Pause, Lap 버튼이 새롭게 나타납니다.
 
-![alt text](screenshots/stopwatch3.png)
+![alt text](screenshots/15.png)
 
 Lap 버튼을 누르면 현재 시간을 Lap 구간으로 저장할 수 있으며, 하단에 Clear All 버튼이 생기게 됩니다. </br>
 만약 Lap의 개수가 화면을 벗어날 만큼 많아지면, 아래로 스크롤하여 확인할 수 있습니다.
 
-![alt text](screenshots/stopwatch4.png)
+![alt text](screenshots/16.png)
 
 Pause 버튼을 누르면 스탑워치가 정지하고 가운데 버튼이 Play로 다시 바뀝니다.
 
-![alt text](screenshots/stopwatch5.png)
+![alt text](screenshots/17.png)
 
 Reset 버튼을 누르면 스탑워치가 초기화되며 다시 첫 화면을 돌아갑니다.
 
