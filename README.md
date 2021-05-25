@@ -112,12 +112,6 @@ Settings 버튼을 통해 제목, 시간과 알람음, 알람음 크기를 조�
 
 타이머는 변경 즉시 저장되고 들어오면 계속 진행하고 있던 것처럼 상황을 불러옵니다. 만약 타이머가 종료되고 들어왔다면 타이머는 리셋되고 위와 같이 알람이 뜹니다.
 
-<!-- Links to resources -->
-
-## Links to Resources
-
-</br>
-
 <!-- Installation -->
 
 ## How to use
@@ -165,3 +159,7 @@ See the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) file for details
 See also the list of [contributors](https://github.com/bagger3025/theClock/contributors) who participated in this project.
 
 ## Acknowledgments
+
+성균관대학교 2021 1학기 오픈소스소프트웨어실습(조재민 교수님)
+SKKU 2021 Semester1 Open Source Software Practice
+SWE_2021_41 분반 Final Project
