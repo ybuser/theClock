@@ -1,6 +1,6 @@
 # theClock
 
-the Clock Website
+theClock Website
 
 -Website overview\
 -How to use\
@@ -14,9 +14,13 @@ the Clock Website
 
 </br>
 
-<!-- A brief overview -->
+<!-- Installation -->
 
-[website link](https://bagger3025.github.io/theClock) </br>
+## How to use
+
+[website link](https://bagger3025.github.io/theClock)
+
+<!-- A brief overview -->
 
 ## Website Overview
 
@@ -49,11 +53,11 @@ the Clock Website
 
 ![alt text](screenshots/13.PNG)
 
-기본 화면은 간단하게 PLAY 버튼만 표시하여 디자인을 간결하게 유지했습니다.
+기본 화면은 PLAY 버튼만 간결하게 표시하였습니다.
 
 ![alt text](screenshots/14.PNG)
 
-Play 버튼을 누를 시 스탑워치가 시작하며, Reset, Pause, Lap 버튼이 새롭게 나타납니다.
+Play 버튼을 누를 시 스탑워치가 시작하며, Reset, Pause, Lap 버튼이 나타납니다.
 
 ![alt text](screenshots/15.PNG)
 
@@ -62,11 +66,11 @@ Lap 버튼을 누르면 현재 시간을 Lap 구간으로 저장할 수 있으�
 
 ![alt text](screenshots/16.PNG)
 
-Pause 버튼을 누르면 스탑워치가 정지하고 가운데 버튼이 Play로 다시 바뀝니다.
+Pause 버튼을 누르면 정지하고 가운데 버튼이 Play로 다시 바뀝니다.
 
 ![alt text](screenshots/17.PNG)
 
-Reset 버튼을 누르면 스탑워치가 초기화되며 다시 첫 화면을 돌아갑니다.
+Reset 버튼을 누르면 초기화되며 다시 첫 화면으로 돌아갑니다.
 
 </br>
 
@@ -104,7 +108,7 @@ Settings 버튼을 통해 제목, 시간과 알람음, 알람음 크기를 조�
 
 시작 버튼을 누르면 타이머가 시작되고, 타이머가 0이 되면 알람음이 울립니다.
 
-타이머를 클릭하면 배경색이 바뀌며 선택됩니다. 선택된 타이머에는 키보드 단축키가 적용됩니다. 스페이스바는 시작 및 정지, esc는 초기화 및 알람음 끄기, 좌우키는 1분씩 증감, 상하키는 5초씩 증감할 수 있습니다.
+타이머를 클릭하면 배경색이 바뀌며 선택됩니다. 선택된 타이머에는 키보드 단축키가 적용됩니다. <kbd>Space bar</kbd>는 시작 및 정지, <kbd>esc</kbd>는 초기화 및 알람음 끄기, <kbd>→</kbd>, <kbd>←</kbd>키는 1분씩 증감, <kbd>↑</kbd>, <kbd>↓</kbd>는 5초씩 증감할 수 있습니다.
 
 ![alt text](screenshots/8.png)
 
@@ -112,11 +116,9 @@ Settings 버튼을 통해 제목, 시간과 알람음, 알람음 크기를 조�
 
 타이머는 변경 즉시 저장되고 들어오면 계속 진행하고 있던 것처럼 상황을 불러옵니다. 만약 타이머가 종료되고 들어왔다면 타이머는 리셋되고 위와 같이 알람이 뜹니다.
 
-<!-- Installation -->
+## Demo Video
 
-## How to use
-
-[website link](https://bagger3025.github.io/theClock)
+[Demo Video Link](https://youtu.be/a2omWoW-IQY)
 
 ## Built With
 
